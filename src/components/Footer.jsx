@@ -1,9 +1,10 @@
 // src/components/Footer.jsx
 import React from 'react';
+import '../index.css'
 
 const Footer = () => {
   return (
-    <>
+    <section id="footer">
       <div>
         <p>CONTACT</p>
         <img src="/assets/images/ig.jpg" alt="Instagram" className="w-64 h-40" />
@@ -21,7 +22,7 @@ const Footer = () => {
         <p>About / Education / Experience / Contact</p>
         <p>2025 COPYRIGHT  |  MUHAMMAD VIKHAN MUHARRAM  |  ALL RIGHTS RESERVED </p>
       </div>
-    </>
+    </section>
   );
 };
 

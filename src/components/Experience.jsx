@@ -1,6 +1,7 @@
 // src/components/Experience.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import '../index.css'
 const BASE_URL = process.env.REACT_APP_API_BASE;
 
 const Experience = () => {

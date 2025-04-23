@@ -1,6 +1,20 @@
 // src/components/About.jsx
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
+import { faCaretRight } from '@fortawesome/free-solid-svg-icons'; // Import ikon yang digunakan
 import axios from 'axios';
+import '../index.css'
+import fotoProfil from '../assets/images/profile.jpg';
+import laravel from '../assets/images/laravel.png';
+import flutter from '../assets/images/flutter.png';
+import python from '../assets/images/python.png';
+import ci3 from '../assets/images/ci3.png';
+import figma from '../assets/images/figma.png';
+import springboot from '../assets/images/springboot.png';
+import bootstrap from '../assets/images/bootstrap.png';
+import tailwind from '../assets/images/tailwind.png';
+import nodejs from '../assets/images/nodejs.png';
+import reactjs from '../assets/images/reactjs.png';
 const BASE_URL = process.env.REACT_APP_API_BASE;
 
 const About = () => {
@@ -19,34 +33,57 @@ const About = () => {
   if (!profile) return <p>Loading...</p>;
 
   return (
-    <section id="about">
-      <div>
-        <img src="/assets/images/profile.jpg" alt="Foto Profil" className="w-64 h-40" />
-      </div>
+    <section id="about" className="mt-64">
+      <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="ml-40"/>
+      <h7 className="text-white font-instrument ml-6 text-[14px] font-semibold">ABOUT</h7>
+      <div className="flex justify-center mr-48 ml-48 mt-28 space-x-16">
+        <div>
+          <img src={fotoProfil} alt="Foto Profil" className="w-[1000px]" />
+        </div>
 
-      <div>
-        <h4>{profile.name}</h4>
-        <h6>{profile.bio}</h6>     
-      </div>
+        <div>
+          <div>
+            <h4 className="font-inknut text-[36px] text-white">{profile.name}</h4>
+            <h6 className="font-instrument mt-3 text-grey">{profile.bio}</h6>     
+          </div>
 
-      <div>
-        <p>SKILLS : </p>
-        <img src="/assets/images/laravel.jpg" alt="Logo Laravel" className="w-64 h-40" />
-        <img src="/assets/images/flutter.jpg" alt="Logo Flutter" className="w-64 h-40" />
-        <img src="/assets/images/python.jpg" alt="Logo Python" className="w-64 h-40" />
-        <img src="/assets/images/ci3.jpg" alt="Logo CI3" className="w-64 h-40" />
-        <img src="/assets/images/figma.jpg" alt="Logo Figma" className="w-64 h-40" />
-        <img src="/assets/images/springboot.jpg" alt="Logo SpringBoot" className="w-64 h-40" />
-        <img src="/assets/images/bootstrap.jpg" alt="Logo Bootstrap" className="w-64 h-40" />
-        <img src="/assets/images/tailwind.jpg" alt="Logo Tailwind" className="w-64 h-40" />
-        <img src="/assets/images/nodejs.jpg" alt="Logo Node JS" className="w-64 h-40" />
-        <img src="/assets/images/reactjs.jpg" alt="Logo React JS" className="w-64 h-40" />
-      </div>
+          <div>
+            <p className="font-instrument text-[16px] font-semibold text-gold mt-6">SKILLS : </p>
+            <div className="flex flex-wrap gap-4 mt-4">
+              <img src={laravel} alt="Logo Laravel" className="h-[45px]" />
+              <img src={flutter} alt="Logo Flutter" className="h-[45px]" />
+              <img src={python}alt="Logo Python" className="h-[45px]" />
+              <img src={ci3} alt="Logo CI3" className="h-[45px]" />
+              <img src={springboot} alt="Logo Figma" className="h-[45px]" />
+              <img src={bootstrap} alt="Logo SpringBoot" className="h-[45px]" />
+              <img src={figma}alt="Logo Bootstrap" className="h-[45px]" />
+              <img src={tailwind} alt="Logo Tailwind" className="h-[45px]" />
+              <img src={nodejs} alt="Logo Node JS" className="h-[45px]" />
+              <img src={reactjs} alt="Logo React JS" className="h-[45px]" />
+            </div>
+          </div>
 
-      <div>
-        <a href="#goToProjects">Go to Projects</a>
-        <a href="#downloadCV">Download CV</a>
+          <div className="flex flex-wrap gap-6 mt-12">
+            <a href="#projects" className="outline outline-2 outline-gold text-gold text-bold py-2 px-12 hover:bg-gold hover:text-darkblue transition">
+              <div className="flex items-center gap-4">
+                <p>
+                  Go to Projects
+                </p>
+                <FontAwesomeIcon icon={faCaretRight}/>
+              </div>
+            </a>
+            <a href="#downloadCV" className="outline outline-2 outline-gold bg-gold text-darkblue text-bold py-2 px-12 hover:bg-darkblue hover:text-gold transition">
+              <div className="flex items-center gap-4">
+                <p>
+                  Download CV
+                </p>
+                <FontAwesomeIcon icon={faCaretRight}/>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
+      
     </section>
   );
 };

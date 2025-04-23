@@ -20,7 +20,7 @@ function App() {
       <Experience />
       <div className='mt-72'>
 
-      <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="ml-40"/>
+      <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="md:ml-40 ml-5"/>
       <h7 className="text-white font-instrument ml-6 text-[14px] font-semibold">PROJECTS</h7> 
       </div>
       <Projects />

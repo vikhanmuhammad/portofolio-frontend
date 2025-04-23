@@ -6,6 +6,8 @@ import Education from './components/Education';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Footer from './components/Footer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import './index.css'
 
 function App() {
@@ -16,6 +18,11 @@ function App() {
       <About />
       <Education />
       <Experience />
+      <div className='mt-72'>
+
+      <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="ml-40"/>
+      <h7 className="text-white font-instrument ml-6 text-[14px] font-semibold">PROJECTS</h7> 
+      </div>
       <Projects />
       <Footer />
     </div>

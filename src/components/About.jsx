@@ -1,7 +1,7 @@
 // src/components/About.jsx
 import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
-import { faCaretRight } from '@fortawesome/free-solid-svg-icons'; // Import ikon yang digunakan
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import '../index.css'
 import fotoProfil from '../assets/images/profile.jpg';

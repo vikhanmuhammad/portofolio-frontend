@@ -13,6 +13,7 @@ module.exports = {
         darkblue: '#020B26',
         gold: '#FFAE00',
         grey: '#C2C2C2',
+        blue: '#091F60'
       },
     },
   },

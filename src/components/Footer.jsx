@@ -1,26 +1,43 @@
 // src/components/Footer.jsx
 import React from 'react';
 import '../index.css'
+import { Instagram, Mail, Linkedin, Phone } from 'lucide-react';
+import logoVM from '../assets/images/logoVMbg.jpg';
 
 const Footer = () => {
   return (
-    <section id="footer">
-      <div>
-        <p>CONTACT</p>
-        <img src="/assets/images/ig.jpg" alt="Instagram" className="w-64 h-40" />
-        <img src="/assets/images/WA.jpg" alt="WhatsApp" className="w-64 h-40" />
-        <img src="/assets/images/mail.jpg" alt="Mail" className="w-64 h-40" />
-        <img src="/assets/images/link.jpg" alt="LinkenIn" className="w-64 h-40" />
+    <section id="footer" style={{ backgroundImage: `url("/assets/images/footertexture.jpg")` }}
+    className="relative flex flex-wrap bg-cover bg-center bg-no-repeat outline outline-2 outline-blue justify-center mt-10">
+      <div className="mt-10 mr-10">
+        <p className="font-instrument text-white font-semibold text-lg">Contact</p>
+        <div className="flex gap-4 items-center mt-6">
+          <a href="https://www.instagram.com/vikhanmuharram" target="_blank" rel="noopener noreferrer">
+            <Instagram className="text-gold w-12 h-12 hover:scale-110 transition-transform" />
+          </a>
+          <a href="mailto:muhammadvikhanmuharram@gmail.com">
+            <Mail className="text-gold w-12 h-12 hover:scale-110 transition-transform" />
+          </a>
+          <a href="https://www.linkedin.com/in/vikhan-muharram-a1787a148/" target="_blank" rel="noopener noreferrer">
+            <Linkedin className="text-gold w-12 h-12 hover:scale-110 transition-transform" />
+          </a>
+          <a href="https://wa.me/6281221003708">
+            <Phone className="text-gold w-12 h-12 hover:scale-110 transition-transform" />
+          </a>
+        </div>
       </div>
 
       <div>
-        <img src="/assets/images/bgLogo.jpg" alt="BG Logo" className="w-64 h-40" />
-        <img src="/assets/images/logoVM.jpg" alt="Logo VM" className="w-64 h-40" />
+        <img src={logoVM} alt="Logo VM" className="w-[142px] mt-10 mb-10 outline outline-2 outline-blue" />
       </div>
 
-      <div>
-        <p>About / Education / Experience / Contact</p>
-        <p>2025 COPYRIGHT  |  MUHAMMAD VIKHAN MUHARRAM  |  ALL RIGHTS RESERVED </p>
+      <div className="flex flex-wrap ml-10 items-center gap-6">
+        <a href="#about" className="font-inknut text-3xl text-white hover:text-gold transition">About</a>
+        <p className="font-inknut text-3xl text-blue font-bold">/</p>
+        <a href="#education" className="font-inknut text-3xl text-white hover:text-gold transition">Education</a>
+        <p className="font-inknut text-3xl text-blue font-bold">/</p>
+        <a href="#experience" className="font-inknut text-3xl text-white hover:text-gold transition">Experience</a>
+        <p className="font-inknut text-3xl text-blue font-bold">/</p>
+        <a href="#footer" className="font-inknut text-3xl text-white hover:text-gold transition">Contact</a>
       </div>
     </section>
   );

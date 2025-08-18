@@ -1,9 +1,9 @@
 // src/components/About.jsx
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import '../index.css';
+
 import fotoProfil from '../assets/images/profile.jpg';
 import laravel from '../assets/images/laravel.png';
 import flutter from '../assets/images/flutter.png';
@@ -16,29 +16,16 @@ import tailwind from '../assets/images/tailwind.png';
 import nodejs from '../assets/images/nodejs.png';
 import reactjs from '../assets/images/reactjs.png';
 
-const BASE_URL = process.env.REACT_APP_API_BASE;
+import profile from '../data/profile'; // 👉 ambil data dari file
 
 const About = () => {
-  const [profile, setProfile] = useState(null);
-
-  useEffect(() => {
-    axios.get(`${BASE_URL}/api/profile/`)
-      .then(res => {
-        setProfile(res.data[0]);
-      })
-      .catch(err => {
-        console.error('Error fetching profile:', err);
-      });
-  }, []);
-
-  if (!profile) return <p>Loading...</p>;
-
   return (
     <section id="about" className="mt-64 px-4">
       <div className="flex items-center">
         <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="md:ml-40" />
         <h7 className="text-white font-instrument ml-6 text-[14px] font-semibold">ABOUT</h7>
       </div>
+
       <div className="flex flex-col lg:flex-row justify-center mt-28 space-y-12 lg:space-y-0 lg:space-x-16 md:mx-48">
         <div className="flex justify-center">
           <img src={fotoProfil} alt="Foto Profil" className="w-[200px] md:w-[1000px] md:h-[325px]" />
@@ -73,8 +60,8 @@ const About = () => {
                 <FontAwesomeIcon icon={faCaretRight} />
               </div>
             </a>
-            <a href="#downloadCV" className="outline outline-2 outline-gold bg-gold text-darkblue text-bold py-2 px-12 hover:bg-darkblue hover:text-gold transition">
-              < div className="flex items-center gap-4">
+            <a href="https://www.canva.com/design/DAGSBx5qt-A/6J6CDwhKRZ-aUKF9HNoCyg/edit?utm_content=DAGSBx5qt-A&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank" rel="noopener noreferrer" className="outline outline-2 outline-gold bg-gold text-darkblue text-bold py-2 px-12 hover:bg-darkblue hover:text-gold transition">
+              <div className="flex items-center gap-4">
                 <p>Download CV</p>
                 <FontAwesomeIcon icon={faCaretRight} />
               </div>

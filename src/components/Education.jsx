@@ -1,6 +1,5 @@
 // src/components/Education.jsx
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import '../index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
@@ -8,23 +7,9 @@ import edubg from '../assets/images/edubg.jpg';
 import logoTelkom from '../assets/images/logoTelkom.png';
 import tult from '../assets/images/tult.jpeg';
 
-const BASE_URL = process.env.REACT_APP_API_BASE;
+import profile from '../data/profile'; // 👉 ambil data dari file
 
 const Education = () => {
-  const [profile, setProfile] = useState(null);
-
-  useEffect(() => {
-    axios.get(`${BASE_URL}/api/profile/`)
-      .then(res => {
-        setProfile(res.data[0]);
-      })
-      .catch(err => {
-        console.error('Error fetching profile:', err);
-      });
-  }, []);
-
-  if (!profile) return <p>Loading...</p>;
-
   return (
     <section id="education" className="mt-64">
       <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="ml-5 md:ml-40"/>

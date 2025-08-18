@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// src/components/Projects.jsx
+import React from 'react';
 import '../index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretRight, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import prjprvw from '../assets/images/prjprvw.jpg';
 import Slider from 'react-slick';
 
-const BASE_URL = process.env.REACT_APP_API_BASE;
+import projects from '../data/projects'; // 👉 pakai data hardcode
 
 // Custom arrow components
 const CustomNextArrow = ({ onClick }) => (
@@ -28,14 +28,6 @@ const CustomPrevArrow = ({ onClick }) => (
 );
 
 const Projects = () => {
-  const [projectsList, setProjectsList] = useState([]);
-
-  useEffect(() => {
-    axios.get(`${BASE_URL}/api/projects/`)
-      .then(res => setProjectsList(res.data))
-      .catch(err => console.error('Error fetching projects data:', err));
-  }, []);
-
   const settings = {
     dots: true,
     infinite: true,
@@ -51,11 +43,11 @@ const Projects = () => {
 
   return (
     <section id="projects" className="container px-4 sm:px-6 md:px-12 lg:px-20 xl:px-32 mt-10">
-      {projectsList.length === 0 ? (
-        <p className="text-white">Loading...</p>
+      {projects.length === 0 ? (
+        <p className="text-white">No projects available</p>
       ) : (
         <Slider {...settings}>
-          {projectsList.map((prj) => (
+          {projects.map((prj) => (
             <div key={prj._id} className="relative">
               <div className="flex flex-col ">
                 <img

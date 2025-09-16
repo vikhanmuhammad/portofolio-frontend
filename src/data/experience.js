@@ -3,7 +3,7 @@
 const experiences = [
   {
     _id: "67f54453463575f79fe6222a",
-    position: "System Analyst",
+    position: "System Analyst & Web Programmer",
     status: "Researchship",
     organization: "Rumah Sakit Hasan Sadikin (RSHS)",
     startYear: "February 2025",

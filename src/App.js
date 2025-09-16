@@ -8,24 +8,28 @@ import Projects from './components/Projects';
 import Footer from './components/Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
-import './index.css'
+// import GlowingBackground from './components/GlowingBackground';
+import './index.css';
 
 function App() {
   return (
-    <div className="mt-0 pt-0 bg-darkblue min-h-screen">
-      <Navbar />
-      <Banner />
-      <About />
-      <Education />
-      <Experience />
-      <div className='mt-72'>
-
-      <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="md:ml-40 ml-5"/>
-      <h7 className="text-white font-instrument ml-6 text-[14px] font-semibold">PROJECTS</h7> 
+    //<GlowingBackground>
+      <div className='bg-darkblue'>
+        <Navbar />
+        <div className="pt-10"> {/* padding atas agar konten tidak tertutup navbar */}
+          <Banner />
+          <About />
+          <Education />
+          <Experience />
+          <div className="mt-72">
+            <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="md:ml-40 ml-5" />
+            <h7 className="text-white font-instrument ml-6 text-[14px] font-semibold">PROJECTS</h7>
+          </div>
+          <Projects />
+          <Footer />
+        </div>
       </div>
-      <Projects />
-      <Footer />
-    </div>
+    //</GlowingBackground>
   );
 }
 

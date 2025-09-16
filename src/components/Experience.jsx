@@ -1,57 +1,81 @@
 // src/components/Experience.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import '../index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
-import expbg from '../assets/images/expbg.jpg';
-
-import experiences from '../data/experience'; // 👉 ambil data hardcode
+import experiences from '../data/experience';
 
 const Experience = () => {
+  const [showFull, setShowFull] = useState({});
+
+  const toggleShow = (id) => {
+    setShowFull((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
   return (
     <section id="experience" className="mt-64 px-4">
       <div className="flex items-center">
         <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="md:ml-40" />
         <h7 className="text-white font-instrument ml-6 text-[14px] font-semibold">EXPERIENCE</h7>
       </div>
-      <div className="relative w-full">
-        {/* Background Image */}
-        <img
-          src={expbg}
-          alt="Background"
-          className="absolute top-0 left-0 w-full h-[300px] object-cover z-0 hidden md:block"
-        />
 
-        {/* Content */}
-        <div className="relative z-10 flex flex-wrap justify-center mt-32 gap-6">
+      <div className="relative w-full">
+        <div className="relative z-10 flex flex-wrap justify-start mt-10 gap-6">
           {experiences.length === 0 ? (
             <p>No experience available</p>
           ) : (
-            <ul className="flex flex-col md:flex-row justify-center items-center gap-20 md:gap-6">
+            <ul className="flex flex-col gap-6 w-full">
               {experiences.map((exp) => (
                 <li
                   key={exp._id}
-                  className="group w-full max-w-[700px] h-auto p-4 flex flex-col justify-center items-center text-center mt-4 border border-gray-700 rounded-lg cursor-pointer"
+                  className="w-full bg-bluelist lg:max-w-[75%] h-auto p-4 flex flex-col lg:flex-row items-start text-left px-10 py-10 border border-gray-700 rounded-lg gap-6 mx-auto"
                 >
-                  {/* Always visible */}
-                  <div>
-                    <p className="font-inknut text-gold text-3xl">{exp.position}</p>
-                    <h3 className="font-semibold font-instrument text-grey mt-3">
+                  {/* Kolom Tahun */}
+                  <div className="flex-shrink-0 lg:w-32">
+                    <h3 className="font-semibold font-instrument text-grey">
                       {exp.startYear} - {exp.endYear}
-                      <p className="text-gray-500">{exp.status}</p>
                     </h3>
                   </div>
 
-                  {/* Hidden, show on hover */}
-                  <div className="mt-6 opacity-0 max-h-0 overflow-hidden group-hover:opacity-100 group-hover:max-h-[400px] transition-all duration-500 ease-in-out">
-                    <p className="text-white font-instrument font-bold">{exp.organization}</p>
-                    <p className="font-instrument text-grey text-xl mt-2">{exp.description}</p>
-                    <a href="#downloadCV" className="block w-full mt-6 flex justify-center">
-                      <div className="outline outline-2 outline-white bg-white text-darkblue font-bold px-12 py-2 flex justify-center items-center gap-4 hover:bg-darkblue hover:text-white transition">
-                        <p>EVIDENCE</p>
-                        <FontAwesomeIcon icon={faCaretRight} />
+                  {/* Kolom Konten */}
+                  <div className="flex flex-col items-start flex-1">
+                    <p className="font-inknut text-gold text-3xl">{exp.position}</p>
+                    <p className="font-semibold font-instrument text-gray-500 mt-2">{exp.status}</p>
+
+                    <div className="mt-2">
+                      <p className="text-white font-instrument font-bold">{exp.organization}</p>
+
+                      {/* Description */}
+                      <p
+                        className={`font-instrument text-grey text-l mt-2 overflow-hidden line-clamp-3 md:line-clamp-none ${
+                          showFull[exp._id] ? 'line-clamp-none' : ''
+                        }`}
+                      >
+                        {exp.description}
+                      </p>
+
+                      {/* Tombol Show More / Less hanya tampil di mobile */}
+                      <button
+                        className="text-gold font-bold mt-1 md:hidden"
+                        onClick={() => toggleShow(exp._id)}
+                      >
+                        {showFull[exp._id] ? 'Show Less' : 'Show More'}
+                      </button>
+
+                      {/* Technologies and Tools */}
+                      <p className="font-semibold font-instrument text-gray-500 mt-4">Tools & Technolgies</p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {exp.technologies && exp.technologies.map((tech, index) => (
+                          <span
+                            key={index}
+                            className="bg-gold text-darkblue text-l font-semibold px-3 py-1 rounded-md"
+                          >
+                            {tech}
+                          </span>
+                        ))}
                       </div>
-                    </a>
+
+                    </div>
                   </div>
                 </li>
               ))}

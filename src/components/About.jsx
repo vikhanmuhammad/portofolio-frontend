@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import '../index.css';
 
-import fotoProfil from '../assets/images/profile.jpg';
 import laravel from '../assets/images/laravel.png';
 import flutter from '../assets/images/flutter.png';
 import python from '../assets/images/python.png';
@@ -16,56 +15,64 @@ import tailwind from '../assets/images/tailwind.png';
 import nodejs from '../assets/images/nodejs.png';
 import reactjs from '../assets/images/reactjs.png';
 
-import profile from '../data/profile'; // 👉 ambil data dari file
+import profile from '../data/profile';
 
 const About = () => {
+  const skills = [
+    { src: laravel, name: 'Laravel' },
+    { src: flutter, name: 'Flutter' },
+    { src: python, name: 'Python' },
+    { src: ci3, name: 'CI3' },
+    { src: springboot, name: 'SpringBoot' },
+    { src: bootstrap, name: 'Bootstrap' },
+    { src: figma, name: 'Figma' },
+    { src: tailwind, name: 'Tailwind' },
+    { src: nodejs, name: 'Node JS' },
+    { src: reactjs, name: 'React JS' },
+  ];
+
   return (
     <section id="about" className="mt-64 px-4">
+      {/* Header Section */}
       <div className="flex items-center">
         <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="md:ml-40" />
         <h7 className="text-white font-instrument ml-6 text-[14px] font-semibold">ABOUT</h7>
       </div>
 
-      <div className="flex flex-col lg:flex-row justify-center mt-28 space-y-12 lg:space-y-0 lg:space-x-16 md:mx-48">
-        <div className="flex justify-center">
-          <img src={fotoProfil} alt="Foto Profil" className="w-[200px] md:w-[1000px] md:h-[325px]" />
-        </div>
-
-        <div className="flex flex-col">
-          <div>
-            <h4 className="font-inknut text-[28px] lg:text-[36px] text-white">{profile.name}</h4>
-            <h6 className="font-instrument mt-3 text-grey text-[14px] lg:text-[16px]">{profile.bio}</h6>
-          </div>
-
-          <div>
-            <p className="font-instrument text-[16px] font-semibold text-gold mt-6">SKILLS:</p>
-            <div className="flex flex-wrap gap-4 mt-4">
-              <img src={laravel} alt="Logo Laravel" className="h-[45px]" />
-              <img src={flutter} alt="Logo Flutter" className="h-[45px]" />
-              <img src={python} alt="Logo Python" className="h-[45px]" />
-              <img src={ci3} alt="Logo CI3" className="h-[45px]" />
-              <img src={springboot} alt="Logo SpringBoot" className="h-[45px]" />
-              <img src={bootstrap} alt="Logo Bootstrap" className="h-[45px]" />
-              <img src={figma} alt="Logo Figma" className="h-[45px]" />
-              <img src={tailwind} alt="Logo Tailwind" className="h-[45px]" />
-              <img src={nodejs} alt="Logo Node JS" className="h-[45px]" />
-              <img src={reactjs} alt="Logo React JS" className="h-[45px]" />
-            </div>
-          </div>
+      {/* 2 Kolom: Get to know me & My Skills */}
+      <div className="flex flex-col lg:flex-row justify-center mt-28 md:mx-48 gap-10">
+        {/* Kolom kiri: Get to know me */}
+        <div className="w-full lg:w-1/2 flex flex-col">
+          <h4 className="font-inknut text-[28px] lg:text-[36px] text-white">Get to know me!</h4>
+          <h6 className="font-instrument mt-3 text-grey text-[14px] lg:text-[16px]">A Software Engineer with hands-on experience in user requirement analysis, software architecture
+ design, and the development of web-based systems and machine learning applications. Skilled in building APIs,
+ integrating ML models into applications, and collaborating across teams using Lean Startup and SCRUM approaches.
+ Capable of bridging communication between technical and non-technical stakeholders. Actively engaged as a
+ teaching assistant and in student organizations, demonstrating strong communication and leadership abilities.</h6>
 
           <div className="flex flex-wrap gap-6 mt-12">
-            <a href="#projects" className="outline outline-2 outline-gold text-gold text-bold py-2 px-12 hover:bg-gold hover:text-darkblue transition">
+            <a href="#footer" className="outline outline-2 outline-gold bg-gold text-darkblue text-bold py-2 px-12 hover:bg-darkblue hover:text-gold transition">
               <div className="flex items-center gap-4">
-                <p>Go to Projects</p>
+                <p>Contact</p>
                 <FontAwesomeIcon icon={faCaretRight} />
               </div>
             </a>
-            <a href="https://www.canva.com/design/DAGSBx5qt-A/6J6CDwhKRZ-aUKF9HNoCyg/edit?utm_content=DAGSBx5qt-A&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank" rel="noopener noreferrer" className="outline outline-2 outline-gold bg-gold text-darkblue text-bold py-2 px-12 hover:bg-darkblue hover:text-gold transition">
-              <div className="flex items-center gap-4">
-                <p>Download CV</p>
-                <FontAwesomeIcon icon={faCaretRight} />
+          </div>
+        </div>
+
+        {/* Kolom kanan: My Skills */}
+        <div className="w-full lg:w-1/2 flex flex-col mt-6 lg:mt-0">
+          <p className="font-inknut text-[28px] lg:text-[36px] text-white">My Skills</p>
+          <div className="flex flex-wrap gap-4 mt-4 justify-center">
+            {skills.map((tech) => (
+              <div
+                key={tech.name}
+                className="flex flex-col items-center justify-center bg-darkblue/50 p-4 rounded-lg shadow-md hover:scale-105 transition-transform w-[90px]"
+              >
+                <img src={tech.src} alt={tech.name} className="h-[45px] mb-2" />
+                <p className="text-white font-instrument text-sm text-center">{tech.name}</p>
               </div>
-            </a>
+            ))}
           </div>
         </div>
       </div>

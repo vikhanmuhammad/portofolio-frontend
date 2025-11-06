@@ -1,105 +1,200 @@
-// src/components/Projects.jsx
 import React from 'react';
-import '../index.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretRight, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import prjprvw from '../assets/images/prjprvw.jpg';
-import Slider from 'react-slick';
-
-import projects from '../data/projects'; // 👉 pakai data hardcode
-
-// Custom arrow components
-const CustomNextArrow = ({ onClick }) => (
-  <div
-    className="absolute top-1/2 right-[-20px] transform -translate-y-1/2 z-10 cursor-pointer"
-    onClick={onClick}
-  >
-    <FontAwesomeIcon icon={faChevronRight} className="text-gold text-3xl" />
-  </div>
-);
-
-const CustomPrevArrow = ({ onClick }) => (
-  <div
-    className="absolute top-1/2 left-[-20px] transform -translate-y-1/2 z-10 cursor-pointer"
-    onClick={onClick}
-  >
-    <FontAwesomeIcon icon={faChevronLeft} className="text-gold text-3xl" />
-  </div>
-);
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { Github, ExternalLink, Star } from 'lucide-react';
+import { projects } from '../data/portfolioData';
 
 const Projects = () => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    customPaging: (i) => <div className="dot text-gold font-instrument font-bold">{i + 1}</div>,
-    nextArrow: <CustomNextArrow />,
-    prevArrow: <CustomPrevArrow />,
-  };
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  });
 
   return (
-    <section id="projects" className="container px-4 sm:px-6 md:px-12 lg:px-20 xl:px-32 mt-10">
-      {projects.length === 0 ? (
-        <p className="text-white">No projects available</p>
-      ) : (
-        <Slider {...settings}>
-          {projects.map((prj) => (
-            <div key={prj._id} className="relative">
-              <div className="flex flex-col ">
-                <img
-                  src={prjprvw}
-                  alt="Preview"
-                  className="w-full max-w-[650px] rounded-lg shadow-lg"
-                />
+    <section id="projects" className="section" style={{ background: 'var(--bg-secondary)' }}>
+      <div className="container">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="section-title">
+            <h2>Featured <span className="accent">Projects</span></h2>
+            <p className="body-lg" style={{ maxWidth: '600px', margin: '0 auto' }}>Showcasing my best work and technical expertise</p>
+          </div>
 
-                <p className="font-instrument text-gold text-xl mt-8 font-semibold">{prj.type}</p>
-                <h1 className="font-inknut text-white text-3xl mt-4 font-bold">
-                  {prj.title}: {prj.motto}
-                </h1>
-                <p className="font-instrument text-gold text-xl mt-4">As {prj.position}</p>
-                <p className="font-instrument text-grey text-base mt-6 max-w-3xl">{prj.description}</p>
+          <div className="grid grid-2" style={{ gap: '32px' }}>
+            {projects.map((project, index) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                style={{
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
+                  cursor: 'default',
+                  position: 'relative'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                  e.currentTarget.style.boxShadow = '0 24px 48px rgba(0, 0, 0, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                {project.featured && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '16px',
+                    right: '16px',
+                    background: 'var(--accent-primary)',
+                    color: 'var(--bg-primary)',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    zIndex: 1
+                  }}>
+                    <Star size={14} fill="currentColor" />
+                    Featured
+                  </div>
+                )}
 
-                <div className="mt-6">
-                  <p className="font-instrument font-bold text-white">Technologies:</p>
-                  <ul className="flex flex-col md:flex-wrap gap-1 md:gap-6 mt-2">
-                    {prj.technologies.map((tech, idx) => (
-                      <li key={idx} className="flex gap-2 text-left">
-                        <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} />
-                        <p className="font-instrument text-grey text-sm md:text-base">{tech}</p>
-                      </li>
-                    ))}
-                  </ul>
+                <div style={{ position: 'relative', overflow: 'hidden', height: '240px', background: 'var(--bg-tertiary)' }}>
+                  <motion.img
+                    src={project.image}
+                    alt={project.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      transition: 'transform 0.5s ease'
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                  />
                 </div>
 
-                <div className="mt-6">
-                  <p className="font-instrument font-bold text-gold">Try it:</p>
-                  <ul className="flex flex-col md:flex-row gap-0 md:gap-6 mt-2">
-                    {prj.link.map((url, idx) => (
-                      <li key={idx} className="mb-4">
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block w-full"
-                        >
-                          <div className="outline outline-2 outline-white bg-white text-darkblue font-bold px-3 py-1 text-sm md:px-5 md:py-2 md:text-base flex justify-center items-center gap-4 hover:bg-darkblue hover:text-white transition max-w-[200px] mx-auto">
-                            <p className="truncate">Try Project</p>
-                            <FontAwesomeIcon icon={faCaretRight} />
-                          </div>
-                        </a>
-                      </li>
+                <div style={{ padding: '28px' }}>
+                  <h3 className="h2" style={{ marginBottom: '12px', fontSize: '22px' }}>{project.title}</h3>
+                  <p className="body-md" style={{ marginBottom: '16px', lineHeight: '1.7' }}>{project.description}</p>
+
+                  {project.achievement && (
+                    <div style={{
+                      background: 'var(--accent-bg)',
+                      border: '1px solid var(--accent-primary)',
+                      borderRadius: '8px',
+                      padding: '12px',
+                      marginBottom: '16px',
+                      fontSize: '13px',
+                      color: 'var(--accent-primary)',
+                      fontWeight: '500'
+                    }}>
+                      🏆 {project.achievement}
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
+                    {project.technologies.map((tech, i) => (
+                      <span key={i} style={{
+                        padding: '6px 12px',
+                        background: 'var(--bg-secondary)',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        color: 'var(--accent-purple)',
+                        border: '1px solid var(--border-subtle)'
+                      }}>
+                        {tech}
+                      </span>
                     ))}
-                  </ul>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        padding: '12px',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-primary)',
+                        borderRadius: '8px',
+                        color: 'var(--text-primary)',
+                        textDecoration: 'none',
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                        e.currentTarget.style.color = 'var(--accent-primary)';
+                        e.currentTarget.style.background = 'var(--accent-bg)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--border-primary)';
+                        e.currentTarget.style.color = 'var(--text-primary)';
+                        e.currentTarget.style.background = 'var(--bg-secondary)';
+                      }}
+                    >
+                      <Github size={18} />
+                      Code
+                    </a>
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        padding: '12px',
+                        background: 'var(--accent-primary)',
+                        border: 'none',
+                        borderRadius: '8px',
+                        color: 'var(--bg-primary)',
+                        textDecoration: 'none',
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'var(--accent-hover)';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'var(--accent-primary)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      <ExternalLink size={18} />
+                      Live Demo
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </Slider>
-      )}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 };

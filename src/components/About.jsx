@@ -1,80 +1,131 @@
-// src/components/About.jsx
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
-import '../index.css';
-
-import laravel from '../assets/images/laravel.png';
-import flutter from '../assets/images/flutter.png';
-import python from '../assets/images/python.png';
-import ci3 from '../assets/images/ci3.png';
-import figma from '../assets/images/figma.png';
-import springboot from '../assets/images/springboot.png';
-import bootstrap from '../assets/images/bootstrap.png';
-import tailwind from '../assets/images/tailwind.png';
-import nodejs from '../assets/images/nodejs.png';
-import reactjs from '../assets/images/reactjs.png';
-
-import profile from '../data/profile';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { Code2, Zap, Users, Award } from 'lucide-react';
+import { personalInfo } from '../data/portfolioData';
 
 const About = () => {
-  const skills = [
-    { src: laravel, name: 'Laravel' },
-    { src: flutter, name: 'Flutter' },
-    { src: python, name: 'Python' },
-    { src: ci3, name: 'CI3' },
-    { src: springboot, name: 'SpringBoot' },
-    { src: bootstrap, name: 'Bootstrap' },
-    { src: figma, name: 'Figma' },
-    { src: tailwind, name: 'Tailwind' },
-    { src: nodejs, name: 'Node JS' },
-    { src: reactjs, name: 'React JS' },
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.2
+  });
+
+  const highlights = [
+    { icon: Code2, label: 'Clean Code', value: '5+ Years' },
+    { icon: Zap, label: 'Fast Delivery', value: '50+ Projects' },
+    { icon: Users, label: 'Team Player', value: 'Collaborative' },
+    { icon: Award, label: 'Quality First', value: 'Excellence' }
   ];
 
   return (
-    <section id="about" className="mt-64 px-4">
-      {/* Header Section */}
-      <div className="flex items-center">
-        <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="md:ml-40" />
-        <h7 className="text-white font-instrument ml-6 text-[14px] font-semibold">ABOUT</h7>
-      </div>
-
-      {/* 2 Kolom: Get to know me & My Skills */}
-      <div className="flex flex-col lg:flex-row justify-center mt-28 md:mx-48 gap-10">
-        {/* Kolom kiri: Get to know me */}
-        <div className="w-full lg:w-1/2 flex flex-col">
-          <h4 className="font-inknut text-[28px] lg:text-[36px] text-white">Get to know me!</h4>
-          <h6 className="font-instrument mt-3 text-grey text-[14px] lg:text-[16px]">A Software Engineer with hands-on experience in user requirement analysis, software architecture
- design, and the development of web-based systems and machine learning applications. Skilled in building APIs,
- integrating ML models into applications, and collaborating across teams using Lean Startup and SCRUM approaches.
- Capable of bridging communication between technical and non-technical stakeholders. Actively engaged as a
- teaching assistant and in student organizations, demonstrating strong communication and leadership abilities.</h6>
-
-          <div className="flex flex-wrap gap-6 mt-12">
-            <a href="#footer" className="outline outline-2 outline-gold bg-gold text-darkblue text-bold py-2 px-12 hover:bg-darkblue hover:text-gold transition">
-              <div className="flex items-center gap-4">
-                <p>Contact</p>
-                <FontAwesomeIcon icon={faCaretRight} />
-              </div>
-            </a>
+    <section id="about" className="section" style={{ background: 'var(--bg-primary)' }}>
+      <div className="container">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="section-title">
+            <h2>About <span className="accent">Me</span></h2>
+            <p className="body-lg" style={{ maxWidth: '600px', margin: '0 auto' }}>Get to know more about my journey and what drives me</p>
           </div>
-        </div>
 
-        {/* Kolom kanan: My Skills */}
-        <div className="w-full lg:w-1/2 flex flex-col mt-6 lg:mt-0">
-          <p className="font-inknut text-[28px] lg:text-[36px] text-white">My Skills</p>
-          <div className="flex flex-wrap gap-4 mt-4 justify-center">
-            {skills.map((tech) => (
-              <div
-                key={tech.name}
-                className="flex flex-col items-center justify-center bg-darkblue/50 p-4 rounded-lg shadow-md hover:scale-105 transition-transform w-[90px]"
-              >
-                <img src={tech.src} alt={tech.name} className="h-[45px] mb-2" />
-                <p className="text-white font-instrument text-sm text-center">{tech.name}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth > 768 ? '1fr 1.5fr' : '1fr', gap: '48px', alignItems: 'center' }}>
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              style={{ display: 'flex', justifyContent: 'center' }}
+            >
+              <div style={{ position: 'relative', width: 'fit-content' }}>
+                <div style={{
+                  position: 'absolute',
+                  inset: '-8px',
+                  background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-purple))',
+                  borderRadius: '50%',
+                  opacity: 0.2,
+                  filter: 'blur(20px)',
+                  animation: 'glow 3s ease-in-out infinite'
+                }}></div>
+                <img
+                  src={personalInfo.profileImage}
+                  alt={personalInfo.name}
+                  style={{
+                    width: '300px',
+                    height: '300px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    border: '4px solid var(--accent-primary)',
+                    position: 'relative',
+                    zIndex: 1
+                  }}
+                />
               </div>
-            ))}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <h3 className="h1" style={{ marginBottom: '24px', color: 'var(--accent-primary)' }}>{personalInfo.title}</h3>
+              <p className="body-lg" style={{ marginBottom: '32px', lineHeight: '1.8' }}>
+                {personalInfo.bio}
+              </p>
+
+              <div className="grid grid-2" style={{ gap: '16px' }}>
+                {highlights.map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={inView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
+                      style={{
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-subtle)',
+                        borderRadius: '12px',
+                        padding: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '16px',
+                        transition: 'all 0.3s ease',
+                        cursor: 'default'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      <div style={{
+                        width: '48px',
+                        height: '48px',
+                        background: 'var(--accent-bg)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'var(--accent-primary)'
+                      }}>
+                        <Icon size={24} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>{item.label}</div>
+                        <div style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)' }}>{item.value}</div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

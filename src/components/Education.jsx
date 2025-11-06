@@ -1,40 +1,141 @@
-// src/components/Education.jsx
 import React from 'react';
-import '../index.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
-import edubg from '../assets/images/edubg.jpg';
-import logoTelkom from '../assets/images/logoTelkom.png';
-import tult from '../assets/images/tult.jpeg';
-
-import profile from '../data/profile'; // 👉 ambil data dari file
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { GraduationCap, MapPin, Calendar } from 'lucide-react';
+import { education } from '../data/portfolioData';
 
 const Education = () => {
-  return (
-    <section id="education" className="mt-64">
-      <FontAwesomeIcon icon={faCaretRight} style={{ color: "#FFD43B" }} className="ml-5 md:ml-40"/>
-      <h7 className="text-white font-instrument ml-6 text-[14px] font-semibold">EDUCATION</h7>
-      <div className="relative w-full mt-32 md:mt-10">
-        {/* Background Image (di belakang) */}
-        <img
-          src={edubg}
-          alt="Background"
-          className="absolute ml-64 w-[800px] mt-16 z-0 hidden lg:block"
-        />
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.2
+  });
 
-        {/* Konten lain (di atas background) */}
-        <div className="relative z-10 flex flex-wrap justify-center mt-0 mx-10 md:mx-0 gap-0 md:gap-24">
-          <div className="flex-col items-center justify-center text-center content-center lg:ml-32">
-            <img src={logoTelkom} alt="Logo Telkom" className="w-10 lg:w-[68px] mx-auto" />
-            <h4 className="text-white mt-10 font-inknut text-[24px] md:text-[36px]">{profile.college}</h4>
-            <p className="font-instrument mt-6 text-[12px] md:text-[16px] font-bold text-grey">{profile.bachelor}</p>
-            <p className="font-instrument mt-2 text-[12px] md:text-[16px] text-grey">{profile.startYear} - {profile.endYear}</p>
-            <p className="font-instrument mt-6 text-[12px] md:text-[16px] font-bold text-grey">GPA : 3.86</p>
+  return (
+    <section id="education" className="section" style={{ background: 'var(--bg-secondary)' }}>
+      <div className="container">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="section-title">
+            <h2>Education <span className="accent">Timeline</span></h2>
+            <p className="body-lg" style={{ maxWidth: '600px', margin: '0 auto' }}>My academic journey and achievements</p>
           </div>
-          <div>
-            <img src={tult} alt="TULT" className="w-50 lg:w-[341px] md:ml-16 md:mt-20 hidden md:block" />
+
+          <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
+            {/* Timeline line */}
+            <div style={{
+              position: 'absolute',
+              left: window.innerWidth > 768 ? '50%' : '24px',
+              top: 0,
+              bottom: 0,
+              width: '2px',
+              background: 'var(--border-primary)',
+              transform: window.innerWidth > 768 ? 'translateX(-50%)' : 'none'
+            }}></div>
+
+            {education.map((edu, index) => (
+              <motion.div
+                key={edu.id}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                style={{
+                  position: 'relative',
+                  marginBottom: index < education.length - 1 ? '80px' : '0',
+                  display: 'grid',
+                  gridTemplateColumns: window.innerWidth > 768 ? '1fr 1fr' : '1fr',
+                  gap: '48px',
+                  alignItems: 'center'
+                }}
+              >
+                {/* Timeline dot */}
+                <div style={{
+                  position: 'absolute',
+                  left: window.innerWidth > 768 ? '50%' : '24px',
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '20px',
+                  height: '20px',
+                  background: 'var(--accent-primary)',
+                  borderRadius: '50%',
+                  border: '4px solid var(--bg-secondary)',
+                  zIndex: 1,
+                  boxShadow: '0 0 20px rgba(218, 255, 1, 0.5)'
+                }}></div>
+
+                <div style={{
+                  gridColumn: window.innerWidth > 768 ? (index % 2 === 0 ? '1' : '2') : '1',
+                  textAlign: window.innerWidth > 768 ? (index % 2 === 0 ? 'right' : 'left') : 'left',
+                  paddingLeft: window.innerWidth <= 768 ? '64px' : '0'
+                }}>
+                  <div className="card" style={{
+                    textAlign: 'left',
+                    cursor: 'default'
+                  }}>
+                    <div style={{
+                      width: '56px',
+                      height: '56px',
+                      background: 'var(--accent-bg)',
+                      borderRadius: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: '20px'
+                    }}>
+                      <GraduationCap size={28} color="var(--accent-primary)" />
+                    </div>
+
+                    <h3 className="h3" style={{ marginBottom: '12px', color: 'var(--text-primary)' }}>{edu.degree}</h3>
+                    <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--accent-primary)', marginBottom: '12px' }}>{edu.university}</div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '14px' }}>
+                        <MapPin size={16} />
+                        <span>{edu.location}</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '14px' }}>
+                        <Calendar size={16} />
+                        <span>{edu.year}</span>
+                      </div>
+                    </div>
+
+                    <div style={{ 
+                      display: 'inline-block',
+                      background: 'var(--bg-tertiary)',
+                      padding: '6px 12px',
+                      borderRadius: '8px',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: 'var(--accent-primary)',
+                      marginBottom: '16px'
+                    }}>
+                      GPA: {edu.gpa}
+                    </div>
+
+                    <div style={{ marginTop: '16px' }}>
+                      {edu.highlights.map((highlight, i) => (
+                        <div key={i} style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          marginBottom: '8px',
+                          color: 'var(--text-secondary)',
+                          fontSize: '14px'
+                        }}>
+                          <div style={{ width: '6px', height: '6px', background: 'var(--accent-primary)', borderRadius: '50%' }}></div>
+                          <span>{highlight}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

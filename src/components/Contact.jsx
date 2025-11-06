@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter } from 'lucide-react';
@@ -9,6 +9,15 @@ const Contact = () => {
     triggerOnce: true,
     threshold: 0.2
   });
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -22,8 +31,7 @@ const Contact = () => {
     e.preventDefault();
     setFormStatus('sending');
     
-    // TODO: Integrate with email service backend
-    // For now, just simulate sending
+    // Simulate sending
     setTimeout(() => {
       setFormStatus('success');
       setFormData({ name: '', email: '', message: '' });
@@ -38,6 +46,15 @@ const Contact = () => {
     });
   };
 
+  const containerStyle = {
+    display: 'grid',
+    gridTemplateColumns: isMobile ? '1fr' : '1fr 1.5fr',
+    gap: isMobile ? '32px' : '48px',
+    maxWidth: '1000px',
+    margin: '0 auto',
+    padding: isMobile ? '0 16px' : '0'
+  };
+
   return (
     <section id="contact" className="section" style={{ background: 'var(--bg-primary)' }}>
       <div className="container">
@@ -47,137 +64,91 @@ const Contact = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <div className="section-title">
+          <div className="section-title text-center mb-8">
             <h2>Get In <span className="accent">Touch</span></h2>
-            <p className="body-lg" style={{ maxWidth: '600px', margin: '0 auto' }}>Have a project in mind? Let's work together!</p>
+            <p className="body-lg" style={{ maxWidth: '600px', margin: '0 auto', padding: isMobile ? '0 16px' : '0' }}>
+              Have a project in mind? Let's work together!
+            </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth > 768 ? '1fr 1.5fr' : '1fr', gap: '48px', maxWidth: '1000px', margin: '0 auto' }}>
+          {/* Grid container responsive */}
+          <div style={containerStyle}>
+            {/* Left contact info */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <h3 className="h2" style={{ marginBottom: '24px' }}>Contact Information</h3>
+              <h3 className="h2" style={{ marginBottom: '24px', fontSize: isMobile ? '20px' : undefined }}>Contact Information</h3>
               <p className="body-md" style={{ marginBottom: '32px', lineHeight: '1.7' }}>
                 Feel free to reach out through any of these channels. I'm always open to discussing new projects and opportunities.
               </p>
 
               <div style={{ marginBottom: '48px' }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
-                  padding: '16px',
-                  background: 'var(--bg-secondary)',
-                  borderRadius: '12px',
-                  marginBottom: '16px',
-                  border: '1px solid var(--border-subtle)',
-                  transition: 'all 0.3s ease',
-                  cursor: 'default'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                  e.currentTarget.style.transform = 'translateX(8px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                  e.currentTarget.style.transform = 'translateX(0)';
-                }}>
-                  <div style={{
-                    width: '48px',
-                    height: '48px',
-                    background: 'var(--accent-bg)',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <Mail size={24} color="var(--accent-primary)" />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>Email</div>
-                    <a href={`mailto:${personalInfo.email}`} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: '16px' }}>{personalInfo.email}</a>
-                  </div>
-                </div>
-
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
-                  padding: '16px',
-                  background: 'var(--bg-secondary)',
-                  borderRadius: '12px',
-                  marginBottom: '16px',
-                  border: '1px solid var(--border-subtle)',
-                  transition: 'all 0.3s ease',
-                  cursor: 'default'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                  e.currentTarget.style.transform = 'translateX(8px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                  e.currentTarget.style.transform = 'translateX(0)';
-                }}>
-                  <div style={{
-                    width: '48px',
-                    height: '48px',
-                    background: 'var(--accent-bg)',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <Phone size={24} color="var(--accent-primary)" />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>Phone</div>
-                    <div style={{ color: 'var(--text-primary)', fontSize: '16px' }}>{personalInfo.phone}</div>
-                  </div>
-                </div>
-
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
-                  padding: '16px',
-                  background: 'var(--bg-secondary)',
-                  borderRadius: '12px',
-                  border: '1px solid var(--border-subtle)',
-                  transition: 'all 0.3s ease',
-                  cursor: 'default'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                  e.currentTarget.style.transform = 'translateX(8px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                  e.currentTarget.style.transform = 'translateX(0)';
-                }}>
-                  <div style={{
-                    width: '48px',
-                    height: '48px',
-                    background: 'var(--accent-bg)',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <MapPin size={24} color="var(--accent-primary)" />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>Location</div>
-                    <div style={{ color: 'var(--text-primary)', fontSize: '16px' }}>{personalInfo.location}</div>
-                  </div>
-                </div>
+                {[
+                  { icon: Mail, label: 'Email', value: personalInfo.email, href: `mailto:${personalInfo.email}` },
+                  { icon: Phone, label: 'Phone', value: personalInfo.phone },
+                  { icon: MapPin, label: 'Location', value: personalInfo.location }
+                ].map((item, idx) => {
+                  const Icon = item.icon;
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '16px',
+                        padding: '16px',
+                        background: 'var(--bg-secondary)',
+                        borderRadius: '12px',
+                        marginBottom: '16px',
+                        border: '1px solid var(--border-subtle)',
+                        transition: 'all 0.3s ease',
+                        cursor: 'default'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                        e.currentTarget.style.transform = 'translateX(8px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                        e.currentTarget.style.transform = 'translateX(0)';
+                      }}
+                    >
+                      <div style={{
+                        width: '48px',
+                        height: '48px',
+                        background: 'var(--accent-bg)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <Icon size={24} color="var(--accent-primary)" />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>{item.label}</div>
+                        {item.href ? (
+                          <a href={item.href} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: isMobile ? '14px' : '16px', wordBreak: 'break-word' }}>
+                            {item.value}
+                          </a>
+                        ) : (
+                          <div style={{ color: 'var(--text-primary)', fontSize: isMobile ? '14px' : '16px', wordBreak: 'break-word' }}>{item.value}</div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
+              {/* Social links */}
               <div>
                 <h4 style={{ fontSize: '16px', marginBottom: '16px', color: 'var(--text-secondary)' }}>Follow Me</h4>
-                <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{
+                  display: 'flex',
+                  gap: '12px',
+                  flexWrap: isMobile ? 'wrap' : 'nowrap'
+                }}>
                   {[
                     { icon: Github, url: personalInfo.socials.github },
                     { icon: Linkedin, url: personalInfo.socials.linkedin },
@@ -223,17 +194,21 @@ const Contact = () => {
               </div>
             </motion.div>
 
+            {/* Right form */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <form onSubmit={handleSubmit} style={{
-                background: 'var(--bg-secondary)',
-                padding: '40px',
-                borderRadius: '16px',
-                border: '1px solid var(--border-subtle)'
-              }}>
+              <form
+                onSubmit={handleSubmit}
+                style={{
+                  background: 'var(--bg-secondary)',
+                  padding: isMobile ? '24px' : '40px',
+                  borderRadius: '16px',
+                  border: '1px solid var(--border-subtle)'
+                }}
+              >
                 <div style={{ marginBottom: '24px' }}>
                   <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Your Name</label>
                   <input

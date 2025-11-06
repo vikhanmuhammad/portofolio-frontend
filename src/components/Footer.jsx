@@ -1,8 +1,16 @@
-import React from 'react';
-import { Github, Linkedin, Twitter, Mail, Heart } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Github, Linkedin, Instagram, Mail, Heart } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 
 const Footer = () => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const currentYear = new Date().getFullYear();
 
   const quickLinks = [
@@ -17,39 +25,39 @@ const Footer = () => {
   const socialLinks = [
     { icon: Github, url: personalInfo.socials.github, label: 'GitHub' },
     { icon: Linkedin, url: personalInfo.socials.linkedin, label: 'LinkedIn' },
-    { icon: Twitter, url: personalInfo.socials.twitter, label: 'Twitter' },
+    { icon: Instagram, url: personalInfo.socials.twitter, label: 'Twitter' },
     { icon: Mail, url: `mailto:${personalInfo.email}`, label: 'Email' }
   ];
 
   return (
-    <footer style={{
-      background: 'var(--bg-secondary)',
-      borderTop: '1px solid var(--border-subtle)',
-      paddingTop: '80px',
-      paddingBottom: '40px',
-      marginTop: '120px'
-    }}>
+    <footer
+      style={{
+        background: 'var(--bg-secondary)',
+        borderTop: '1px solid var(--border-subtle)',
+        paddingTop: '60px',
+        paddingBottom: '40px',
+        marginTop: '120px'
+      }}
+    >
       <div className="container">
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: window.innerWidth > 768 ? '2fr 1fr 1fr 1fr' : '1fr',
-          gap: window.innerWidth > 768 ? '64px' : '40px',
-          marginBottom: '64px'
-        }}>
+        {/* Grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: windowWidth > 768 ? '2fr 1fr 1fr 1fr' : '1fr',
+            gap: windowWidth > 768 ? '64px' : '32px',
+            marginBottom: '48px'
+          }}
+        >
           {/* Brand Section */}
           <div>
-            <h3 style={{
-              fontSize: '24px',
-              fontWeight: '700',
-              color: 'var(--accent-primary)',
-              marginBottom: '16px'
-            }}>
+            <h3 style={{ fontSize: '24px', fontWeight: '700', color: 'var(--accent-primary)', marginBottom: '16px' }}>
               {personalInfo.name}
             </h3>
-            <p className="body-md" style={{ marginBottom: '24px', lineHeight: '1.7', maxWidth: '300px' }}>
+            <p style={{ marginBottom: '24px', lineHeight: '1.7', maxWidth: '300px' }}>
               {personalInfo.title} passionate about building innovative solutions and creating exceptional digital experiences.
             </p>
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
                 return (
@@ -90,12 +98,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 style={{
-              fontSize: '16px',
-              fontWeight: '600',
-              color: 'var(--text-primary)',
-              marginBottom: '20px'
-            }}>
+            <h4 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '20px' }}>
               Quick Links
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
@@ -103,14 +106,9 @@ const Footer = () => {
                 <li key={index} style={{ marginBottom: '12px' }}>
                   <a
                     href={link.href}
-                    style={{
-                      color: 'var(--text-muted)',
-                      textDecoration: 'none',
-                      fontSize: '14px',
-                      transition: 'color 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => e.target.style.color = 'var(--accent-primary)'}
-                    onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
+                    style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '14px', transition: 'color 0.2s ease' }}
+                    onMouseEnter={(e) => (e.target.style.color = 'var(--accent-primary)')}
+                    onMouseLeave={(e) => (e.target.style.color = 'var(--text-muted)')}
                   >
                     {link.name}
                   </a>
@@ -121,12 +119,7 @@ const Footer = () => {
 
           {/* More Links */}
           <div>
-            <h4 style={{
-              fontSize: '16px',
-              fontWeight: '600',
-              color: 'var(--text-primary)',
-              marginBottom: '20px'
-            }}>
+            <h4 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '20px' }}>
               More
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
@@ -134,14 +127,9 @@ const Footer = () => {
                 <li key={index} style={{ marginBottom: '12px' }}>
                   <a
                     href={link.href}
-                    style={{
-                      color: 'var(--text-muted)',
-                      textDecoration: 'none',
-                      fontSize: '14px',
-                      transition: 'color 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => e.target.style.color = 'var(--accent-primary)'}
-                    onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
+                    style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '14px', transition: 'color 0.2s ease' }}
+                    onMouseEnter={(e) => (e.target.style.color = 'var(--accent-primary)')}
+                    onMouseLeave={(e) => (e.target.style.color = 'var(--text-muted)')}
                   >
                     {link.name}
                   </a>
@@ -152,98 +140,46 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 style={{
-              fontSize: '16px',
-              fontWeight: '600',
-              color: 'var(--text-primary)',
-              marginBottom: '20px'
-            }}>
+            <h4 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '20px' }}>
               Contact
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
               <li style={{ marginBottom: '12px' }}>
                 <a
                   href={`mailto:${personalInfo.email}`}
-                  style={{
-                    color: 'var(--text-muted)',
-                    textDecoration: 'none',
-                    fontSize: '14px',
-                    transition: 'color 0.2s ease',
-                    wordBreak: 'break-all'
-                  }}
-                  onMouseEnter={(e) => e.target.style.color = 'var(--accent-primary)'}
-                  onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
+                  style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '14px', wordBreak: 'break-all' }}
+                  onMouseEnter={(e) => (e.target.style.color = 'var(--accent-primary)')}
+                  onMouseLeave={(e) => (e.target.style.color = 'var(--text-muted)')}
                 >
                   {personalInfo.email}
                 </a>
               </li>
-              <li style={{ marginBottom: '12px' }}>
-                <span style={{
-                  color: 'var(--text-muted)',
-                  fontSize: '14px'
-                }}>
-                  {personalInfo.phone}
-                </span>
-              </li>
-              <li style={{ marginBottom: '12px' }}>
-                <span style={{
-                  color: 'var(--text-muted)',
-                  fontSize: '14px'
-                }}>
-                  {personalInfo.location}
-                </span>
-              </li>
+              <li style={{ marginBottom: '12px', color: 'var(--text-muted)', fontSize: '14px' }}>{personalInfo.phone}</li>
+              <li style={{ marginBottom: '12px', color: 'var(--text-muted)', fontSize: '14px' }}>{personalInfo.location}</li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div style={{
-          paddingTop: '32px',
-          borderTop: '1px solid var(--border-subtle)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '16px'
-        }}>
-          <p style={{
-            color: 'var(--text-muted)',
-            fontSize: '14px',
-            margin: 0,
+        <div
+          style={{
+            paddingTop: '32px',
+            borderTop: '1px solid var(--border-subtle)',
             display: 'flex',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            gap: '8px'
-          }}>
+            flexWrap: 'wrap',
+            gap: '16px'
+          }}
+        >
+          <p style={{ color: 'var(--text-muted)', fontSize: '14px', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             © {currentYear} {personalInfo.name}. Made with <Heart size={16} color="var(--accent-primary)" fill="var(--accent-primary)" /> and lots of coffee
           </p>
-          <div style={{
-            display: 'flex',
-            gap: '24px',
-            fontSize: '14px'
-          }}>
-            <a
-              href="#"
-              style={{
-                color: 'var(--text-muted)',
-                textDecoration: 'none',
-                transition: 'color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.target.style.color = 'var(--accent-primary)'}
-              onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
-            >
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', fontSize: '14px' }}>
+            <a href="#" style={{ color: 'var(--text-muted)', textDecoration: 'none' }} onMouseEnter={(e) => (e.target.style.color = 'var(--accent-primary)')} onMouseLeave={(e) => (e.target.style.color = 'var(--text-muted)')}>
               Privacy Policy
             </a>
-            <a
-              href="#"
-              style={{
-                color: 'var(--text-muted)',
-                textDecoration: 'none',
-                transition: 'color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.target.style.color = 'var(--accent-primary)'}
-              onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
-            >
+            <a href="#" style={{ color: 'var(--text-muted)', textDecoration: 'none' }} onMouseEnter={(e) => (e.target.style.color = 'var(--accent-primary)')} onMouseLeave={(e) => (e.target.style.color = 'var(--text-muted)')}>
               Terms of Service
             </a>
           </div>

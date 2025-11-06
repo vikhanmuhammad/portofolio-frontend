@@ -30,7 +30,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatus('sending');
-    
+
     // Simulate sending
     setTimeout(() => {
       setFormStatus('success');
@@ -52,11 +52,16 @@ const Contact = () => {
     gap: isMobile ? '32px' : '48px',
     maxWidth: '1000px',
     margin: '0 auto',
-    padding: isMobile ? '0 16px' : '0'
+    padding: isMobile ? '0 16px' : '0',
+    overflow: 'hidden' // <-- prevent overflow
   };
 
   return (
-    <section id="contact" className="section" style={{ background: 'var(--bg-primary)' }}>
+    <section
+      id="contact"
+      className="section overflow-x-hidden" // <-- prevent horizontal scroll
+      style={{ background: 'var(--bg-primary)' }}
+    >
       <div className="container">
         <motion.div
           ref={ref}
@@ -65,13 +70,22 @@ const Contact = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="section-title text-center mb-8">
-            <h2>Get In <span className="accent">Touch</span></h2>
-            <p className="body-lg" style={{ maxWidth: '600px', margin: '0 auto', padding: isMobile ? '0 16px' : '0' }}>
+            <h2>
+              Get In <span className="accent">Touch</span>
+            </h2>
+            <p
+              className="body-lg"
+              style={{
+                maxWidth: '600px',
+                margin: '0 auto',
+                padding: isMobile ? '0 16px' : '0',
+                wordBreak: 'break-word' // <-- prevent long content overflow
+              }}
+            >
               Have a project in mind? Let's work together!
             </p>
           </div>
 
-          {/* Grid container responsive */}
           <div style={containerStyle}>
             {/* Left contact info */}
             <motion.div
@@ -79,8 +93,19 @@ const Contact = () => {
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <h3 className="h2" style={{ marginBottom: '24px', fontSize: isMobile ? '20px' : undefined }}>Contact Information</h3>
-              <p className="body-md" style={{ marginBottom: '32px', lineHeight: '1.7' }}>
+              <h3
+                className="h2"
+                style={{
+                  marginBottom: '24px',
+                  fontSize: isMobile ? '20px' : undefined
+                }}
+              >
+                Contact Information
+              </h3>
+              <p
+                className="body-md"
+                style={{ marginBottom: '32px', lineHeight: '1.7' }}
+              >
                 Feel free to reach out through any of these channels. I'm always open to discussing new projects and opportunities.
               </p>
 
@@ -104,7 +129,8 @@ const Contact = () => {
                         marginBottom: '16px',
                         border: '1px solid var(--border-subtle)',
                         transition: 'all 0.3s ease',
-                        cursor: 'default'
+                        cursor: 'default',
+                        overflowWrap: 'break-word' // <-- prevent horizontal overflow
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = 'var(--accent-primary)';
@@ -115,25 +141,34 @@ const Contact = () => {
                         e.currentTarget.style.transform = 'translateX(0)';
                       }}
                     >
-                      <div style={{
-                        width: '48px',
-                        height: '48px',
-                        background: 'var(--accent-bg)',
-                        borderRadius: '8px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}>
+                      <div
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          background: 'var(--accent-bg)',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
                         <Icon size={24} color="var(--accent-primary)" />
                       </div>
-                      <div>
+                      <div style={{ wordBreak: 'break-word' }}>
                         <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>{item.label}</div>
                         {item.href ? (
-                          <a href={item.href} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: isMobile ? '14px' : '16px', wordBreak: 'break-word' }}>
+                          <a
+                            href={item.href}
+                            style={{
+                              color: 'var(--text-primary)',
+                              textDecoration: 'none',
+                              fontSize: isMobile ? '14px' : '16px'
+                            }}
+                          >
                             {item.value}
                           </a>
                         ) : (
-                          <div style={{ color: 'var(--text-primary)', fontSize: isMobile ? '14px' : '16px', wordBreak: 'break-word' }}>{item.value}</div>
+                          <div style={{ color: 'var(--text-primary)', fontSize: isMobile ? '14px' : '16px' }}>{item.value}</div>
                         )}
                       </div>
                     </div>
@@ -144,11 +179,7 @@ const Contact = () => {
               {/* Social links */}
               <div>
                 <h4 style={{ fontSize: '16px', marginBottom: '16px', color: 'var(--text-secondary)' }}>Follow Me</h4>
-                <div style={{
-                  display: 'flex',
-                  gap: '12px',
-                  flexWrap: isMobile ? 'wrap' : 'nowrap'
-                }}>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
                   {[
                     { icon: Github, url: personalInfo.socials.github },
                     { icon: Linkedin, url: personalInfo.socials.linkedin },
@@ -206,7 +237,8 @@ const Contact = () => {
                   background: 'var(--bg-secondary)',
                   padding: isMobile ? '24px' : '40px',
                   borderRadius: '16px',
-                  border: '1px solid var(--border-subtle)'
+                  border: '1px solid var(--border-subtle)',
+                  overflowWrap: 'break-word' // <-- prevent horizontal overflow
                 }}
               >
                 <div style={{ marginBottom: '24px' }}>
@@ -217,7 +249,7 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="input-field"
+                    className="input-field break-words"
                     placeholder="John Doe"
                   />
                 </div>
@@ -230,7 +262,7 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="input-field"
+                    className="input-field break-words"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -242,7 +274,7 @@ const Contact = () => {
                     value={formData.message}
                     onChange={handleChange}
                     required
-                    className="input-field"
+                    className="input-field break-words"
                     placeholder="Tell me about your project..."
                     rows="6"
                   />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Instagram } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 
 const Contact = () => {
@@ -183,7 +183,7 @@ const Contact = () => {
                   {[
                     { icon: Github, url: personalInfo.socials.github },
                     { icon: Linkedin, url: personalInfo.socials.linkedin },
-                    { icon: Twitter, url: personalInfo.socials.twitter }
+                    { icon: Instagram, url: personalInfo.socials.twitter }
                   ].map((social, index) => {
                     const Icon = social.icon;
                     return (

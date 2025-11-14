@@ -192,8 +192,8 @@ export const projects = [
     technologies: ["Laravel", "Flask", "MySQL", "Python", "Bootstrap", "Strava API"],
     skills: ["Artificial Intelligence", "Web Development", "SCRUM"],
     achievement: "Registered under Intellectual Property Rights (HKI)",
-    github: "https://github.com/vikhanmuharram/aigo",
-    live: "#",
+    github: "https://github.com/W-zrd/Aigo",
+    live: "https://www.aigo.humicprototyping.com/",
     featured: true
   },
   {
@@ -204,8 +204,8 @@ export const projects = [
     technologies: ["Laravel", "Flutter", "MySQL", "Bootstrap"],
     skills: ["Fullstack Development", "API Integration", "Project Management"],
     achievement: "Complete fleet management solution with mobile and web platforms",
-    github: "https://github.com/vikhanmuharram/transport-berkah",
-    live: "#",
+    github: "https://github.com/Fadhil-AS/aljabbar",
+    live: null,
     featured: true
   },
   {
@@ -216,8 +216,8 @@ export const projects = [
     technologies: ["Figma"],
     skills: ["UI/UX Design", "Mobile App Prototype"],
     achievement: "Comprehensive prototype for public transport booking system",
-    github: "#",
-    live: "#",
+    github: null,
+    live: " https://bit.ly/TBUser",
     featured: false
   },
   {
@@ -228,8 +228,45 @@ export const projects = [
     technologies: ["Figma"],
     skills: ["UI/UX Design", "Project Management"],
     achievement: "Complete tourism booking platform prototype",
-    github: "#",
-    live: "#",
+    github: null,
+    live: "https://bit.ly/NatourPenyediaAlat",
     featured: false
+  }
+];
+
+// Certifications and Licenses
+export const certifications = [
+  {
+    id: 1,
+    name: "Certificate of Creation Registration: AIGO",
+    issuer: "Ministry of Law and Human Rights of the Republic of Indonesia",
+    date: "September 2024",
+    credentialId: null,
+    description: "AIGO is an original software work registered under the Certificate of Creation Registration (HKI) by the Ministry of Law and Human Rights of Indonesia, confirming its legal protection as a copyrighted digital creation.",
+    icon: "cloud",
+    color: "#FF9900",
+    link: "https://drive.google.com/file/d/1b0noumC0GGUPrSzlvdztj-YC5xeJQXsl/view?usp=sharing"
+  },
+  {
+    id: 2,
+    name: "Meta Front-End Developer",
+    issuer: "Meta",
+    date: "November 2025",
+    credentialId: "9O286GQ4DT57",
+    description: "Completed the Meta Front-End Developer Professional Certificate, gaining hands-on experience in HTML, CSS, JavaScript, React, and responsive web design. Developed and deployed interactive, user-centered web applications following industry best practices.",
+    icon: "code",
+    color: "#00A4E4",
+    link: "https://www.coursera.org/account/accomplishments/professional-cert/9O286GQ4DT57"
+  },
+  {
+    id: 3,
+    name: "Google IT Support",
+    issuer: "Google",
+    date: "November 2025",
+    credentialId: "R6FBJFBV8II2",
+    description: "Completed the Google IT Support Professional Certificate, developing foundational skills in troubleshooting, networking, operating systems, system administration, and security to provide effective IT support.",
+    icon: "google",
+    color: "#4285F4",
+    link: "https://www.coursera.org/account/accomplishments/professional-cert/certificate/R6FBJFBV8II2"
   }
 ];

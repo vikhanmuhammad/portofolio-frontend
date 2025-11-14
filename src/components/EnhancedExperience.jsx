@@ -1,0 +1,225 @@
+import React, { useRef, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { Briefcase, Calendar, MapPin, Award, Sparkles } from 'lucide-react';
+import { experience } from '../data/portfolioData';
+import gsap from 'gsap';
+
+const EnhancedExperience = () => {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start']
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+
+  return (
+    <section 
+      ref={sectionRef}
+      id="experience" 
+      className="section" 
+      style={{ background: 'var(--bg-primary)', position: 'relative', overflow: 'hidden' }}
+    >
+      {/* Parallax background */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: '20%',
+          left: '10%',
+          width: '300px',
+          height: '300px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+          y
+        }}
+      />
+
+      <div className="container">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="section-title text-center mb-8">
+            <motion.h2
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.6 }}
+            >
+              Work <span className="accent">Experience</span>
+            </motion.h2>
+            <motion.p 
+              className="body-lg"
+              style={{ maxWidth: '600px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <motion.span
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+              >
+                <Sparkles size={20} color="var(--accent-primary)" />
+              </motion.span>
+              My professional journey and key achievements
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8" style={{ maxWidth: '900px', margin: '0 auto' }}>
+            {experience.map((exp, index) => {
+              const cardRef = useRef(null);
+
+              useEffect(() => {
+                if (inView && cardRef.current) {
+                  gsap.fromTo(
+                    cardRef.current,
+                    { opacity: 0, y: 80, rotateX: -15 },
+                    {
+                      opacity: 1,
+                      y: 0,
+                      rotateX: 0,
+                      duration: 0.8,
+                      delay: index * 0.2,
+                      ease: 'power3.out'
+                    }
+                  );
+                }
+              }, [inView, index]);
+
+              return (
+                <motion.div
+                  key={exp.id}
+                  ref={cardRef}
+                  whileHover={{
+                    y: -12,
+                    scale: 1.02,
+                    boxShadow: '0 30px 60px rgba(59, 130, 246, 0.3)'
+                  }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    background: 'var(--bg-secondary)',
+                    borderRadius: '20px',
+                    padding: '32px',
+                    border: '2px solid var(--border-subtle)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    opacity: 0,
+                    cursor: 'pointer'
+                  }}
+                >
+                  {/* Gradient overlay on hover */}
+                  <motion.div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '4px',
+                      background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-purple), var(--accent-cyan))',
+                    }}
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    transition={{ duration: 0.8, delay: index * 0.1 }}
+                  />
+
+                  <div className="flex flex-col md:flex-row gap-6">
+                    {/* Icon */}
+                    <motion.div
+                      style={{
+                        width: '64px',
+                        height: '64px',
+                        background: 'var(--accent-bg)',
+                        borderRadius: '16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}
+                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      <Briefcase size={32} color="var(--accent-primary)" />
+                    </motion.div>
+
+                    {/* Content */}
+                    <div className="flex-1">
+                      <h3 className="text-xl md:text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+                        {exp.role}
+                      </h3>
+                      <div className="text-lg font-semibold mb-3" style={{ color: 'var(--accent-primary)' }}>
+                        {exp.company}
+                      </div>
+
+                      <div className="flex flex-wrap gap-4 mb-4 text-sm" style={{ color: 'var(--text-muted)' }}>
+                        <div className="flex items-center gap-2">
+                          <Calendar size={16} />
+                          <span>{exp.period}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin size={16} />
+                          <span>{exp.location}</span>
+                        </div>
+                      </div>
+
+                      <p className="mb-4" style={{ color: 'var(--text-secondary)', lineHeight: '1.7' }}>
+                        {exp.description}
+                      </p>
+
+                      {/* Achievements */}
+                      {exp.achievements && exp.achievements.length > 0 && (
+                        <div className="space-y-2">
+                          {exp.achievements.map((achievement, idx) => (
+                            <motion.div
+                              key={idx}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={inView ? { opacity: 1, x: 0 } : {}}
+                              transition={{ delay: 0.5 + index * 0.2 + idx * 0.1 }}
+                              className="flex items-start gap-3"
+                            >
+                              <motion.div
+                                style={{
+                                  width: '8px',
+                                  height: '8px',
+                                  background: 'var(--accent-primary)',
+                                  borderRadius: '50%',
+                                  marginTop: '8px',
+                                  flexShrink: 0
+                                }}
+                                animate={{
+                                  scale: [1, 1.3, 1],
+                                  boxShadow: [
+                                    '0 0 8px rgba(59, 130, 246, 0.5)',
+                                    '0 0 16px rgba(59, 130, 246, 0.8)',
+                                    '0 0 8px rgba(59, 130, 246, 0.5)'
+                                  ]
+                                }}
+                                transition={{
+                                  duration: 2,
+                                  repeat: Infinity,
+                                  delay: idx * 0.3
+                                }}
+                              />
+                              <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
+                                {achievement}
+                              </span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default EnhancedExperience;

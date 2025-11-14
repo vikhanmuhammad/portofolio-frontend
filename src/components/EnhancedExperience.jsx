@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Briefcase, Calendar, MapPin, Sparkles } from 'lucide-react';
@@ -8,9 +8,8 @@ import gsap from 'gsap';
 const EnhancedExperience = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
   const sectionRef = useRef(null);
-
-  // Create an array of refs (one for each card)
   const cardRefs = useRef([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -19,29 +18,26 @@ const EnhancedExperience = () => {
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
-  /** 
-   * GSAP CARD ANIMATION — triggered once inView === true
-   */
   useEffect(() => {
-    if (!inView) return;
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // GSAP animation for cards only on desktop
+  useEffect(() => {
+    if (!inView || isMobile) return;
 
     cardRefs.current.forEach((card, index) => {
       if (!card) return;
-
       gsap.fromTo(
         card,
         { opacity: 0, y: 80, rotateX: -15 },
-        {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          duration: 0.8,
-          delay: index * 0.2,
-          ease: 'power3.out'
-        }
+        { opacity: 1, y: 0, rotateX: 0, duration: 0.8, delay: index * 0.2, ease: 'power3.out' }
       );
     });
-  }, [inView]);
+  }, [inView, isMobile]);
 
   return (
     <section
@@ -68,15 +64,15 @@ const EnhancedExperience = () => {
       <div className="container">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+          animate={isMobile ? { opacity: 1, y: 0 } : inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
           {/* Section Title */}
           <div className="section-title text-center mb-8">
             <motion.h2
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              initial={isMobile ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+              animate={isMobile ? { opacity: 1, scale: 1 } : inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.6 }}
             >
               Work <span className="accent">Experience</span>
@@ -85,16 +81,18 @@ const EnhancedExperience = () => {
             <motion.p
               className="body-lg"
               style={{ maxWidth: '600px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
+              initial={isMobile ? { opacity: 1 } : { opacity: 0 }}
+              animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <motion.span
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-              >
-                <Sparkles size={20} color="var(--accent-primary)" />
-              </motion.span>
+              {!isMobile && (
+                <motion.span
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                >
+                  <Sparkles size={20} color="var(--accent-primary)" />
+                </motion.span>
+              )}
               My professional journey and key achievements
             </motion.p>
           </div>
@@ -104,12 +102,8 @@ const EnhancedExperience = () => {
             {experience.map((exp, index) => (
               <motion.div
                 key={exp.id}
-                ref={(el) => (cardRefs.current[index] = el)} // assign ref to array
-                whileHover={{
-                  y: -12,
-                  scale: 1.02,
-                  boxShadow: '0 30px 60px rgba(59, 130, 246, 0.3)'
-                }}
+                ref={(el) => (cardRefs.current[index] = el)}
+                whileHover={!isMobile ? { y: -12, scale: 1.02, boxShadow: '0 30px 60px rgba(59, 130, 246, 0.3)' } : {}}
                 transition={{ duration: 0.3 }}
                 style={{
                   background: 'var(--bg-secondary)',
@@ -118,7 +112,7 @@ const EnhancedExperience = () => {
                   border: '2px solid var(--border-subtle)',
                   position: 'relative',
                   overflow: 'hidden',
-                  opacity: 0,
+                  opacity: isMobile ? 1 : 0,
                   cursor: 'pointer'
                 }}
               >
@@ -132,8 +126,8 @@ const EnhancedExperience = () => {
                     height: '4px',
                     background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-purple), var(--accent-cyan))',
                   }}
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
+                  initial={isMobile ? { scaleX: 1 } : { scaleX: 0 }}
+                  whileInView={isMobile ? { scaleX: 1 } : { scaleX: 1 }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
                 />
 
@@ -150,7 +144,7 @@ const EnhancedExperience = () => {
                       justifyContent: 'center',
                       flexShrink: 0
                     }}
-                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
                     transition={{ duration: 0.6 }}
                   >
                     <Briefcase size={32} color="var(--accent-primary)" />
@@ -188,8 +182,8 @@ const EnhancedExperience = () => {
                         {exp.achievements.map((achievement, idx) => (
                           <motion.div
                             key={idx}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={inView ? { opacity: 1, x: 0 } : {}}
+                            initial={isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                            animate={isMobile ? { opacity: 1, x: 0 } : inView ? { opacity: 1, x: 0 } : {}}
                             transition={{ delay: 0.5 + index * 0.2 + idx * 0.1 }}
                             className="flex items-start gap-3"
                           >
@@ -202,19 +196,15 @@ const EnhancedExperience = () => {
                                 marginTop: '8px',
                                 flexShrink: 0
                               }}
-                              animate={{
+                              animate={!isMobile ? {
                                 scale: [1, 1.3, 1],
                                 boxShadow: [
                                   '0 0 8px rgba(59, 130, 246, 0.5)',
                                   '0 0 16px rgba(59, 130, 246, 0.8)',
                                   '0 0 8px rgba(59, 130, 246, 0.5)'
                                 ]
-                              }}
-                              transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                delay: idx * 0.3
-                              }}
+                              } : {}}
+                              transition={{ duration: 2, repeat: Infinity, delay: idx * 0.3 }}
                             />
                             <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
                               {achievement}

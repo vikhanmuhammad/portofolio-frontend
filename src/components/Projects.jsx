@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Sparkles } from 'lucide-react';
@@ -10,9 +10,22 @@ const Projects = () => {
     triggerOnce: true,
     threshold: 0.1
   });
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
-    <section id="projects" className="section" style={{ background: 'var(--bg-secondary)', position: 'relative', overflow: 'hidden' }}>
+    <section
+      id="projects"
+      className="section"
+      style={{ background: 'var(--bg-secondary)', position: 'relative', overflow: 'hidden' }}
+    >
       {/* Animated background elements */}
       <motion.div
         style={{
@@ -26,37 +39,37 @@ const Projects = () => {
           filter: 'blur(60px)',
           zIndex: 0
         }}
-        animate={{
+        animate={!isMobile ? {
           y: [0, 50, 0],
           x: [0, 30, 0],
-        }}
+        } : {}}
         transition={{
           duration: 10,
           repeat: Infinity,
           ease: 'easeInOut'
         }}
       />
-      
+
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+          animate={isMobile ? { opacity: 1, y: 0 } : inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
           <div className="section-title">
             <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+              animate={isMobile ? { opacity: 1, y: 0 } : inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6 }}
             >
               Featured <span className="accent">Projects</span>
             </motion.h2>
-            <motion.p 
-              className="body-lg" 
+            <motion.p
+              className="body-lg"
               style={{ maxWidth: '600px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
+              initial={isMobile ? { opacity: 1 } : { opacity: 0 }}
+              animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <motion.span
@@ -71,7 +84,7 @@ const Projects = () => {
 
           <div className="grid grid-2" style={{ gap: '32px' }}>
             {projects.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} inView={inView} />
+              <ProjectCard key={project.id} project={project} index={index} inView={!isMobile ? inView : true} />
             ))}
           </div>
         </motion.div>

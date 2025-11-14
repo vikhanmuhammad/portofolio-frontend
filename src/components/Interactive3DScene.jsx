@@ -1,16 +1,24 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
+import { isMobileDevice } from '../utils/deviceDetection';
 
 const Interactive3DScene = () => {
   const containerRef = useRef(null);
   const [spheres, setSpheres] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
   const mousePosition = useRef({ x: 0, y: 0 });
   const sphereRefs = useRef([]);
 
   useEffect(() => {
-    // Create interactive spheres
-    const newSpheres = [
+    const mobile = isMobileDevice();
+    setIsMobile(mobile);
+    
+    // Reduce sphere count and size on mobile
+    const newSpheres = mobile ? [
+      { id: 1, x: 50, y: 50, size: 150, color: 'rgba(59, 130, 246, 0.25)', speed: 0.01 },
+      { id: 2, x: 30, y: 70, size: 120, color: 'rgba(139, 92, 246, 0.2)', speed: 0.01 },
+    ] : [
       { id: 1, x: 50, y: 50, size: 200, color: 'rgba(59, 130, 246, 0.3)', speed: 0.02 },
       { id: 2, x: 20, y: 70, size: 150, color: 'rgba(139, 92, 246, 0.25)', speed: 0.015 },
       { id: 3, x: 80, y: 30, size: 180, color: 'rgba(6, 182, 212, 0.28)', speed: 0.018 },
@@ -19,6 +27,9 @@ const Interactive3DScene = () => {
   }, []);
 
   useEffect(() => {
+    // Disable mouse tracking on mobile for better performance
+    if (isMobile) return;
+    
     const handleMouseMove = (e) => {
       const x = (e.clientX / window.innerWidth) * 100;
       const y = (e.clientY / window.innerHeight) * 100;
@@ -43,7 +54,7 @@ const Interactive3DScene = () => {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [spheres]);
+  }, [spheres, isMobile]);
 
   return (
     <div 
@@ -126,7 +137,7 @@ const Interactive3DScene = () => {
       </svg>
 
       {/* Floating particles */}
-      {Array.from({ length: 50 }).map((_, i) => (
+      {Array.from({ length: isMobile ? 15 : 50 }).map((_, i) => (
         <motion.div
           key={i}
           style={{

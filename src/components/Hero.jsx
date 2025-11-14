@@ -4,6 +4,7 @@ import { ArrowRight, Github, Linkedin, Mail, Sparkles } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 import { textReveal, magneticButton } from '../utils/animations';
 import Interactive3DScene from './Interactive3DScene';
+import { isMobileDevice, getParticleCount } from '../utils/deviceDetection';
 
 const Hero = () => {
   const canvasRef = useRef(null);
@@ -29,7 +30,7 @@ const Hero = () => {
     canvas.height = window.innerHeight;
 
     const particles = [];
-    const particleCount = windowWidth < 768 ? 50 : 100;
+    const particleCount = getParticleCount(); // Optimized for mobile
 
     class Particle {
       constructor() {

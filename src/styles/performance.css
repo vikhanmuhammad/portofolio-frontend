@@ -1,0 +1,74 @@
+/* Performance Optimizations for Mobile */
+
+/* Hardware acceleration for animations */
+.card,
+.btn-primary,
+.btn-secondary,
+[class*="motion-"] {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize images */
+img {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Reduce animations on mobile */
+@media (max-width: 768px) {
+  * {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.3s !important;
+  }
+  
+  /* Disable expensive effects on mobile */
+  .card:hover {
+    transform: translateY(-4px) !important;
+  }
+  
+  /* Simplify shadows on mobile */
+  .card {
+    box-shadow: 0 2px 8px var(--shadow-sm) !important;
+  }
+  
+  /* Reduce blur on mobile */
+  [style*="blur"] {
+    filter: none !important;
+  }
+}
+
+/* Optimize for devices with reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* GPU acceleration hints */
+canvas {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize scroll performance */
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent layout shifts */
+section {
+  contain: layout;
+}
+
+/* Optimize repaints */
+.section {
+  contain: paint;
+}

@@ -1,8 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
+import { isMobileDevice } from '../utils/deviceDetection';
 
 const SmoothScroll = ({ children }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
+    // Disable smooth scroll on mobile for better performance
+    const mobile = isMobileDevice();
+    setIsMobile(mobile);
+    
+    if (mobile) return; // Skip smooth scroll on mobile
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

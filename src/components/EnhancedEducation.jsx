@@ -12,7 +12,7 @@ const EducationCard = ({ edu, index, inView, isMobile, lineLeft }) => {
   const cardRef = useRef(null);
 
   useEffect(() => {
-    if (inView && cardRef.current) {
+    if (!isMobile && inView && cardRef.current) {
       gsap.fromTo(
         cardRef.current,
         { opacity: 0, x: index % 2 === 0 ? -100 : 100 },
@@ -24,8 +24,11 @@ const EducationCard = ({ edu, index, inView, isMobile, lineLeft }) => {
           ease: 'power3.out'
         }
       );
+    } else if (isMobile && cardRef.current) {
+      // Tampilkan langsung tanpa animasi di mobile
+      gsap.set(cardRef.current, { opacity: 1, x: 0 });
     }
-  }, [inView, index]);
+  }, [inView, index, isMobile]);
 
   return (
     <div
@@ -158,8 +161,8 @@ const EducationCard = ({ edu, index, inView, isMobile, lineLeft }) => {
                   color: 'var(--text-secondary)',
                   fontSize: isMobile ? '12px' : '14px'
                 }}
-                initial={{ opacity: 0, x: -20 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
+                initial={isMobile ? {} : { opacity: 0, x: -20 }}
+                animate={isMobile ? {} : inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ delay: 0.5 + index * 0.2 + i * 0.1 }}
               >
                 <motion.div 
@@ -198,6 +201,8 @@ const EnhancedEducation = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const sectionRef = useRef(null);
 
+  const isMobileDevice = window.innerWidth < 768;
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start']
@@ -229,22 +234,22 @@ const EnhancedEducation = () => {
           borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
           filter: 'blur(80px)',
-          opacity,
-          scale
+          opacity: isMobileDevice ? 1 : opacity,
+          scale: isMobileDevice ? 1 : scale
         }}
       />
 
       <div className="container">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          initial={isMobileDevice ? {} : { opacity: 0, y: 50 }}
+          animate={isMobileDevice ? {} : inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
           <div className="section-title">
             <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              initial={isMobileDevice ? {} : { opacity: 0, y: 30 }}
+              animate={isMobileDevice ? {} : inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6 }}
             >
               Education <span className="accent">Timeline</span>
@@ -253,8 +258,8 @@ const EnhancedEducation = () => {
             <motion.p 
               className="body-lg" 
               style={{ maxWidth: '600px', margin: '0 auto' }}
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
+              initial={isMobileDevice ? {} : { opacity: 0 }}
+              animate={isMobileDevice ? {} : inView ? { opacity: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               My academic journey and achievements
@@ -274,8 +279,8 @@ const EnhancedEducation = () => {
                 background: 'linear-gradient(180deg, transparent, var(--accent-primary), transparent)',
                 transform: lineTransform
               }}
-              initial={{ scaleY: 0 }}
-              animate={inView ? { scaleY: 1 } : {}}
+              initial={isMobileDevice ? {} : { scaleY: 0 }}
+              animate={isMobileDevice ? {} : inView ? { scaleY: 1 } : {}}
               transition={{ duration: 1, delay: 0.5 }}
             />
 

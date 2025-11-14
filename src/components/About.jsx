@@ -8,7 +8,10 @@ import { fadeInUp, fadeInLeft, fadeInRight } from '../utils/animations';
 const About = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
   const cardRef = useRef(null);
-  
+
+  // Detect mobile
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
   // 3D tilt effect
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -66,37 +69,43 @@ const About = () => {
       />
       
       <div className="container mx-auto" style={{ position: 'relative', zIndex: 1 }}>
+
+        {/* SECTION TITLE WRAPPER */}
         <motion.div
           ref={ref}
-          {...fadeInUp}
-          animate={inView ? fadeInUp.animate : fadeInUp.initial}
+          {...(!isMobile && fadeInUp)}
+          animate={!isMobile ? (inView ? fadeInUp.animate : fadeInUp.initial) : undefined}
         >
-          {/* Section Title */}
           <div className="section-title">
+
+            {/* TITLE */}
             <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              initial={!isMobile ? { opacity: 0, y: 30 } : false}
+              animate={!isMobile ? (inView ? { opacity: 1, y: 0 } : {}) : undefined}
               transition={{ duration: 0.6 }}
             >
               About <span className="accent">Me</span>
             </motion.h2>
+
+            {/* SUBTITLE */}
             <motion.p 
               className="body-lg" 
               style={{ maxWidth: '600px', margin: '0 auto' }}
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
+              initial={!isMobile ? { opacity: 0 } : false}
+              animate={!isMobile ? (inView ? { opacity: 1 } : {}) : undefined}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               Get to know more about my journey and what drives me
             </motion.p>
           </div>
 
-          {/* Grid */}
+          {/* GRID */}
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr] gap-12 items-center">
-            {/* Profile with 3D Tilt and Glow */}
+
+            {/* PROFILE IMAGE */}
             <motion.div
-              {...fadeInLeft}
-              animate={inView ? fadeInLeft.animate : fadeInLeft.initial}
+              {...(!isMobile && fadeInLeft)}
+              animate={!isMobile ? (inView ? fadeInLeft.animate : fadeInLeft.initial) : undefined}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="flex justify-center relative"
             >
@@ -105,7 +114,7 @@ const About = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
-                {/* Animated Glow Rings */}
+                {/* Glow ring */}
                 <motion.div
                   style={{
                     position: 'absolute',
@@ -126,6 +135,7 @@ const About = () => {
                   }}
                 />
                 
+                {/* Outer rotating ring */}
                 <motion.div
                   style={{
                     position: 'absolute',
@@ -152,7 +162,6 @@ const About = () => {
                   }}
                 />
                 
-                {/* Floating icons */}
                 {[Code2, Zap, Award].map((Icon, i) => (
                   <motion.div
                     key={i}
@@ -184,17 +193,17 @@ const About = () => {
               </motion.div>
             </motion.div>
 
-            {/* About Text */}
+            {/* TEXT SECTION */}
             <motion.div
-              {...fadeInRight}
-              animate={inView ? fadeInRight.animate : fadeInRight.initial}
+              {...(!isMobile && fadeInRight)}
+              animate={!isMobile ? (inView ? fadeInRight.animate : fadeInRight.initial) : undefined}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <motion.h3
                 className="text-2xl md:text-4xl font-bold mb-6"
                 style={{ color: 'var(--accent-primary)' }}
-                initial={{ opacity: 0, x: 30 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
+                initial={!isMobile ? { opacity: 0, x: 30 } : false}
+                animate={!isMobile ? (inView ? { opacity: 1, x: 0 } : {}) : undefined}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
                 {personalInfo.title}
@@ -203,22 +212,21 @@ const About = () => {
               <motion.p
                 className="text-base md:text-lg leading-relaxed mb-8"
                 style={{ color: 'var(--text-primary)' }}
-                initial={{ opacity: 0 }}
-                animate={inView ? { opacity: 1 } : {}}
+                initial={!isMobile ? { opacity: 0 } : false}
+                animate={!isMobile ? (inView ? { opacity: 1 } : {}) : undefined}
                 transition={{ duration: 0.6, delay: 0.6 }}
               >
                 {personalInfo.bio}
               </motion.p>
 
-              {/* Highlights with 3D hover effect */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {highlights.map((item, index) => {
                   const Icon = item.icon;
                   return (
                     <motion.div
                       key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={inView ? { opacity: 1, y: 0 } : {}}
+                      initial={!isMobile ? { opacity: 0, y: 20 } : false}
+                      animate={!isMobile ? (inView ? { opacity: 1, y: 0 } : {}) : undefined}
                       transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
                       whileHover={{ 
                         y: -8, 
@@ -255,8 +263,10 @@ const About = () => {
                 })}
               </div>
             </motion.div>
+
           </div>
         </motion.div>
+
       </div>
     </section>
   );

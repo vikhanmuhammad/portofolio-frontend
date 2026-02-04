@@ -110,10 +110,12 @@ export const techStack = [
   { name: "Git", category: "Version Control", proficiency: "Expert", level: "expert" },
   { name: "REST API", category: "API", proficiency: "Expert", level: "expert" },
   { name: "UML", category: "Documentation", proficiency: "Expert", level: "expert" },
+  { name: "Node.js", category: "Backend", proficiency: "Expert", level: "expert" },
+  { name: "Express.js", category: "Backend", proficiency: "Expert", level: "expert" },
+  { name: "Angular", category: "Frontend", proficiency: "Expert", level: "expert" },
+
   
   // Advanced Level
-  { name: "Node.js", category: "Backend", proficiency: "Advanced", level: "advanced" },
-  { name: "Express.js", category: "Backend", proficiency: "Advanced", level: "advanced" },
   { name: "CodeIgniter 3", category: "Backend", proficiency: "Advanced", level: "advanced" },
   { name: "Java Spring Boot", category: "Backend", proficiency: "Advanced", level: "advanced" },
   { name: "MongoDB", category: "Database", proficiency: "Advanced", level: "advanced" },
@@ -139,10 +141,26 @@ export const techStack = [
 export const experience = [
   {
     id: 1,
+    title: "Full Stack Developer",
+    company: "PT. Amerta Indah Otsuka",
+    location: "Sukabumi, West Java",
+    period: "Nov 2025 - May 2026",
+    description: "Fullstack Developer Intern with hands-on experience in developing and maintaining internal systems using Angular (Module Federation), Node.js with Prisma ORM and SQL, and Flutter for mobile apps. Delivered complex systems within tight deadlines, resolved critical legacy issues efficiently, and actively collaborated in Agile Scrum teams to foster a productive and collaborative coding environment.",
+    achievements: [
+      "Developing and maintaining internal systems to support company operations using Angular (including Module Federation) for frontend and Node.js with Prisma ORM and SQL on backend. Also using flutter for mobile application development",
+      "Successfully developed and delivered a complex system within a 2-month timeline",
+      "Efficiently analyzed and resolved issues in a legacy system, including fixing 29 reported bugs within just 2 days",
+      "Collaborating with cross-functional teams and actively participating in Sprint Planning and other Scrum ceremonies to ensure effective delivery of solutions",
+      "Contributing to creating an efficient and collaborative coding environment, promoting teamwork, continuous learning, and “vibe coding” culture"
+    ],
+    technologies: ["Angular", "NodeTS", "Flutter", "PostgreSQL", "My SQL"]
+  },
+  {
+    id: 2,
     title: "System Analyst",
     company: "RSUP dr. Hasan Sadikin (RSHS)",
     location: "Bandung, West Java",
-    period: "2024",
+    period: "Feb 2025 - Jul 2025",
     description: "Designed and delivered a fully functional hospital-wide Helpdesk web system replacing social media as the complaint channel. Architected seamless integration with RSHS's legacy infrastructure, enabling efficient complaint routing and synchronization.",
     achievements: [
       "Validated 100% of functional requirements through iterative testing with hospital representatives",
@@ -154,11 +172,11 @@ export const experience = [
     technologies: ["System Analysis", "UML", "n8n", "SCRUM", "Web Development"]
   },
   {
-    id: 2,
+    id: 3,
     title: "Mobile Application Developer",
     company: "BBS Pool & Café",
     location: "Bandung, West Java",
-    period: "2024",
+    period: "Jul 2024 - Sep 2024",
     description: "Developed a Flutter mobile app with Firebase for real-time billiard table booking management. Designed admin interfaces for 10+ tables including schedule, price, and transaction control.",
     achievements: [
       "Integrated Midtrans API for secure, cashless payments and managed multiple transaction states",
@@ -168,11 +186,11 @@ export const experience = [
     technologies: ["Flutter", "Firebase", "Midtrans API", "Mobile Development"]
   },
   {
-    id: 3,
+    id: 4,
     title: "AI & Web Developer",
     company: "HUMIC Laboratory, Telkom University",
     location: "Bandung, West Java",
-    period: "2023",
+    period: "Feb 2024 - Jun 2024",
     description: "Built a KNN-based obesity classification model (100% accuracy) and calorie prediction model (R² = 0.42, MAE = 230) using 11,000+ health records. Integrated both models into AIGO, a Flask–Laravel web app for health tracking.",
     achievements: [
       "Collaborated in a 4-member SCRUM team (AI, Backend, Frontend, Scrum Master) ensuring smooth ML–system integration",

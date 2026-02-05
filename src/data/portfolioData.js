@@ -150,6 +150,7 @@ export const experience = [
       "Developing and maintaining internal systems to support company operations using Angular (including Module Federation) for frontend and Node.js with Prisma ORM and SQL on backend. Also using flutter for mobile application development",
       "Successfully developed and delivered a complex system within a 2-month timeline",
       "Efficiently analyzed and resolved issues in a legacy system, including fixing 29 reported bugs within just 2 days",
+      "Implementing and maintaining CI/CD pipelines to automate build, testing, and deployment processes, while managing source code using Git to ensure code quality and collaboration",
       "Collaborating with cross-functional teams and actively participating in Sprint Planning and other Scrum ceremonies to ensure effective delivery of solutions",
       "Contributing to creating an efficient and collaborative coding environment, promoting teamwork, continuous learning, and “vibe coding” culture"
     ],

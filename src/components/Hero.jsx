@@ -1,136 +1,60 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight, Github, Linkedin, Mail, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
-import { textReveal, magneticButton } from '../utils/animations';
-import Interactive3DScene from './Interactive3DScene';
-import { isMobileDevice, getParticleCount } from '../utils/deviceDetection';
 
 const Hero = () => {
-  const isMobile = isMobileDevice(); // ← ADD THIS
-  const canvasRef = useRef(null);
-  const heroRef = useRef(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  // Mouse position tracking for 3D effect
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  
-  const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 30 });
-  const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 30 });
-  
-  const rotateX = useTransform(smoothMouseY, [-300, 300], [5, -5]);
-  const rotateY = useTransform(smoothMouseX, [-300, 300], [-5, 5]);
+  const heroRef = useRef(null);
+  const spotRef = useRef(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const particles = [];
-    const particleCount = getParticleCount();
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 1 - 0.5;
-        this.speedY = Math.random() * 1 - 0.5;
-        this.opacity = Math.random() * 0.5 + 0.2;
-        this.pulse = Math.random() * Math.PI * 2;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        this.pulse += 0.02;
-
-        if (this.x > canvas.width) this.x = 0;
-        if (this.x < 0) this.x = canvas.width;
-        if (this.y > canvas.height) this.y = 0;
-        if (this.y < 0) this.y = canvas.height;
-      }
-      draw() {
-        const colors = [
-          `rgba(59, 130, 246, ${this.opacity * (0.5 + Math.sin(this.pulse) * 0.5)})`,
-          `rgba(139, 92, 246, ${this.opacity * (0.5 + Math.sin(this.pulse) * 0.5)})`,
-          `rgba(6, 182, 212, ${this.opacity * (0.5 + Math.sin(this.pulse) * 0.5)})`
-        ];
-
-        const colorIndex = Math.floor(this.x % 3);
-        ctx.fillStyle = colors[colorIndex];
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = colors[colorIndex];
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-    }
-
-    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach((p) => {
-        p.update();
-        p.draw();
-      });
-
-      particles.forEach((a, i) => {
-        particles.slice(i + 1).forEach((b) => {
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 150) {
-            const opacity = 0.3 * (1 - distance / 150);
-            ctx.strokeStyle = `rgba(59, 130, 246, ${opacity})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        });
-      });
-
-      requestAnimationFrame(animate);
-    };
-    animate();
-
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      setWindowWidth(window.innerWidth);
-    };
-    const handleMouseMove = (e) => {
-      const rect = heroRef.current?.getBoundingClientRect();
-      if (rect) {
-        mouseX.set(e.clientX - rect.left - rect.width / 2);
-        mouseY.set(e.clientY - rect.top - rect.height / 2);
-      }
-    };
-
+    const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Cursor spotlight — direct DOM update, zero re-renders
+  useEffect(() => {
+    const hero = heroRef.current;
+    const spot = spotRef.current;
+    if (!hero || !spot) return;
+
+    const handleMouseMove = (e) => {
+      const rect = hero.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      spot.style.left = `${x}px`;
+      spot.style.top = `${y}px`;
+      spot.style.opacity = '1';
+    };
+
+    const handleMouseLeave = () => {
+      spot.style.opacity = '0';
+    };
+
+    hero.addEventListener('mousemove', handleMouseMove);
+    hero.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
+      hero.removeEventListener('mousemove', handleMouseMove);
+      hero.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [mouseX, mouseY, windowWidth]);
+  }, []);
 
   const scrollToContact = () =>
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
 
-  const getHeadingSize = () => (windowWidth < 768 ? '2.5rem' : '4rem');
-  const getSubHeadingSize = () => (windowWidth < 768 ? '1.1rem' : '1.8rem');
+  const headingSize =
+    windowWidth < 360 ? '1.75rem' :
+    windowWidth < 480 ? '2rem' :
+    windowWidth < 768 ? '2.6rem' :
+    '3.8rem';
+
+  const subHeadingSize =
+    windowWidth < 480 ? '0.95rem' :
+    windowWidth < 768 ? '1.05rem' :
+    '1.35rem';
 
   return (
     <section
@@ -142,356 +66,218 @@ const Hero = () => {
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden',
-        padding: '0 16px'
       }}
     >
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 0,
-          opacity: 0.6
-        }}
-      >
-        <Interactive3DScene />
-      </div>
+      {/* Dot grid */}
+      <div className="hero-bg-grid" />
 
-      <canvas
-        ref={canvasRef}
+      {/* Cursor spotlight — follows mouse via direct DOM, no re-render */}
+      <div
+        ref={spotRef}
         style={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 1,
+          width: '560px',
+          height: '560px',
+          borderRadius: '50%',
+          background:
+            'radial-gradient(circle, var(--hero-spot-color) 0%, transparent 70%)',
+          filter: 'blur(60px)',
           pointerEvents: 'none',
-          opacity: 0.7
+          zIndex: 0,
+          transform: 'translate(-50%, -50%)',
+          left: '50%',
+          top: '40%',
+          opacity: 0,
+          transition: 'left 0.18s ease, top 0.18s ease, opacity 0.4s ease',
         }}
       />
 
-      {/* Floating Orbs */}
-      {!isMobile && (
-        <>
-          <motion.div
-            style={{
-              position: 'absolute',
-              top: '20%',
-              left: '10%',
-              width: '300px',
-              height: '300px',
-              borderRadius: '50%',
-              background:
-                'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)',
-              filter: 'blur(60px)',
-              zIndex: 2
-            }}
-            animate={{
-              y: [0, 50, 0],
-              x: [0, 30, 0],
-              scale: [1, 1.2, 1]
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: 'easeInOut'
-            }}
-          />
+      {/* Static top-center soft glow */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-60px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '600px',
+          height: '360px',
+          background:
+            'radial-gradient(ellipse at center top, var(--hero-spot-color) 0%, transparent 70%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
 
-          <motion.div
-            style={{
-              position: 'absolute',
-              bottom: '20%',
-              right: '15%',
-              width: '250px',
-              height: '250px',
-              borderRadius: '50%',
-              background:
-                'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)',
-              filter: 'blur(60px)',
-              zIndex: 2
-            }}
-            animate={{
-              y: [0, -40, 0],
-              x: [0, -25, 0],
-              scale: [1, 1.15, 1]
-            }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: 1
-            }}
-          />
-        </>
-      )}
-
-      {/* 3D Tilt Wrapper */}
-      <motion.div
+      <div
         className="container"
         style={{
           position: 'relative',
-          zIndex: 10,
+          zIndex: 1,
           width: '100%',
-          maxWidth: '900px',
-          margin: '0 auto',
           textAlign: 'center',
-          perspective: '1000px',
-          rotateX,
-          rotateY,
-          transformStyle: 'preserve-3d'
+          padding: windowWidth < 480 ? '100px 14px 60px' : '100px 24px 60px',
         }}
       >
-        {/* Badge */}
+        {/* Status badge */}
         <motion.div
-          initial={isMobile ? false : { opacity: 0, y: 30 }}
-          animate={isMobile ? {} : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          style={{ marginBottom: '28px' }}
         >
-          <motion.div
-            whileHover={{ scale: 1.05 }}
+          <span
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              background: 'rgba(59, 130, 246, 0.1)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(59, 130, 246, 0.3)',
-              color: 'var(--accent-primary)',
-              padding: '8px 20px',
-              borderRadius: '30px',
-              fontSize: windowWidth < 768 ? '12px' : '14px',
-              fontWeight: '600',
-              marginBottom: '24px',
-              boxShadow: '0 8px 32px rgba(59, 130, 246, 0.15)'
+              background: 'rgba(34, 197, 94, 0.07)',
+              border: '1px solid rgba(34, 197, 94, 0.22)',
+              color: 'rgb(74, 222, 128)',
+              padding: '6px 16px',
+              borderRadius: '20px',
+              fontSize: windowWidth < 480 ? '12px' : '13px',
+              fontWeight: '500',
+              letterSpacing: '0.01em',
             }}
           >
-            <motion.div
-              animate={{ rotate: [0, 360] }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: 'linear'
-              }}
-            >
-              <Sparkles size={16} />
-            </motion.div>
+            <span className="status-dot" />
             Available for new opportunities
-          </motion.div>
+          </span>
         </motion.div>
 
         {/* Heading */}
         <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.2 }}
           style={{
-            fontSize: getHeadingSize(),
-            marginBottom: '20px',
-            lineHeight: 1.2,
+            fontSize: headingSize,
+            marginBottom: '16px',
+            lineHeight: 1.15,
             fontWeight: '800',
-            letterSpacing: '-0.02em'
+            letterSpacing: '-0.02em',
           }}
-          initial={isMobile ? false : textReveal.initial}
-          animate={isMobile ? {} : textReveal.animate}
-          transition={{ duration: 0.8, delay: 0.4 }}
         >
           Hi, I'm{' '}
-          <motion.span
-            style={{
-              color: 'var(--accent-primary)',
-              display: 'inline-block'
-            }}
-            whileHover={{
-              scale: 1.05,
-              textShadow: '0 0 30px rgba(59, 130, 246, 0.8)'
-            }}
-          >
+          <span style={{ color: 'var(--accent-primary)' }}>
             {personalInfo.name}
-          </motion.span>
+          </span>
         </motion.h1>
 
         {/* Tagline */}
-        <motion.h2
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.3 }}
           style={{
-            fontSize: getSubHeadingSize(),
+            fontSize: subHeadingSize,
             color: 'var(--text-secondary)',
             fontWeight: 400,
-            marginBottom: '40px',
-            maxWidth: '700px',
-            margin: '0 auto 40px'
+            maxWidth: '580px',
+            margin: '0 auto 40px',
+            lineHeight: 1.65,
           }}
-          initial={isMobile ? false : { opacity: 0, y: 30 }}
-          animate={isMobile ? {} : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
         >
           {personalInfo.tagline}
-        </motion.h2>
+        </motion.p>
 
         {/* Buttons */}
         <motion.div
-          initial={isMobile ? false : { opacity: 0, y: 30 }}
-          animate={isMobile ? {} : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.4 }}
           style={{
             display: 'flex',
-            gap: '16px',
+            gap: '12px',
             justifyContent: 'center',
             flexWrap: 'wrap',
-            marginBottom: '40px'
+            marginBottom: '48px',
           }}
         >
-          <motion.button
-            className="btn-primary"
-            onClick={scrollToContact}
-            {...magneticButton}
-            whileHover={{
-              scale: 1.05,
-              boxShadow: '0 10px 40px rgba(59, 130, 246, 0.4)'
-            }}
-            style={{
-              position: 'relative',
-              overflow: 'hidden'
-            }}
-          >
-            {!isMobile && (
-              <motion.div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: '-100%',
-                  width: '100%',
-                  height: '100%',
-                  background:
-                    'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)'
-                }}
-                animate={{ left: ['100%', '-100%'] }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'linear'
-                }}
-              />
-            )}
+          <button className="btn-primary" onClick={scrollToContact}>
+            Contact Me <ArrowRight size={18} />
+          </button>
 
-            Contact Me <ArrowRight size={20} />
-          </motion.button>
-
-          <motion.a
+          <a
             href={personalInfo.socials.github}
             target="_blank"
             rel="noopener noreferrer"
             style={{ textDecoration: 'none' }}
           >
-            <motion.button
-              className="btn-secondary"
-              {...magneticButton}
-              whileHover={{
-                borderColor: 'var(--accent-primary)',
-                boxShadow: '0 10px 40px rgba(59, 130, 246, 0.2)'
-              }}
-            >
-              <Github size={20} /> View GitHub
-            </motion.button>
-          </motion.a>
+            <button className="btn-secondary">
+              <Github size={18} /> View GitHub
+            </button>
+          </a>
         </motion.div>
 
-        {/* Social Icons */}
+        {/* Social icons */}
         <motion.div
-          initial={isMobile ? false : { opacity: 0 }}
-          animate={isMobile ? {} : { opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.55 }}
           style={{
             display: 'flex',
             gap: '20px',
             justifyContent: 'center',
             alignItems: 'center',
-            flexWrap: 'wrap'
           }}
         >
-          {[Linkedin, Github, Mail].map((Icon, index) => (
-            <motion.a
+          {[
+            { Icon: Linkedin, href: personalInfo.socials.linkedin },
+            { Icon: Github, href: personalInfo.socials.github },
+            { Icon: Mail, href: `mailto:${personalInfo.email}` },
+          ].map(({ Icon, href }, index) => (
+            <a
               key={index}
-              href={
-                index === 0
-                  ? personalInfo.socials.linkedin
-                  : index === 1
-                  ? personalInfo.socials.github
-                  : `mailto:${personalInfo.email}`
-              }
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{
-                scale: 1.2,
-                y: -5,
-                color: 'var(--accent-primary)',
-                filter:
-                  'drop-shadow(0 0 10px rgba(59, 130, 246, 0.5))'
-              }}
-              whileTap={{ scale: 0.9 }}
-              style={{
-                color: 'var(--text-muted)',
-                transition: 'color 0.2s',
-                cursor: 'pointer'
-              }}
+              className="social-icon-link"
             >
-              <Icon size={28} />
-            </motion.a>
+              <Icon size={22} />
+            </a>
           ))}
         </motion.div>
-      </motion.div>
+      </div>
 
-      {/* Scroll Indicator — disabled on mobile */}
-      {!isMobile && (
-        <motion.div
-          animate={{ y: [0, 15, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+      {/* Scroll indicator */}
+      <motion.div
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'absolute',
+          bottom: '32px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          cursor: 'pointer',
+          zIndex: 1,
+          opacity: 0.45,
+        }}
+        onClick={() =>
+          document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })
+        }
+      >
+        <div
           style={{
-            position: 'absolute',
-            bottom: '40px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 10,
-            cursor: 'pointer'
+            width: '22px',
+            height: '36px',
+            border: '2px solid var(--border-primary)',
+            borderRadius: '12px',
+            display: 'flex',
+            justifyContent: 'center',
+            paddingTop: '6px',
           }}
-          onClick={() =>
-            document
-              .getElementById('about')
-              ?.scrollIntoView({ behavior: 'smooth' })
-          }
         >
-          <motion.div
+          <div
             style={{
-              width: '24px',
-              height: '40px',
-              border: '2px solid var(--accent-primary)',
-              borderRadius: '16px',
-              display: 'flex',
-              justifyContent: 'center',
-              paddingTop: '8px',
-              backdropFilter: 'blur(10px)',
-              background: 'rgba(59, 130, 246, 0.05)'
+              width: '3px',
+              height: '8px',
+              background: 'var(--text-muted)',
+              borderRadius: '2px',
             }}
-            whileHover={{ scale: 1.1 }}
-          >
-            <motion.div
-              style={{
-                width: '4px',
-                height: '10px',
-                background: 'var(--accent-primary)',
-                borderRadius: '2px',
-                boxShadow:
-                  '0 0 10px rgba(59, 130, 246, 0.8)'
-              }}
-              animate={{ y: [0, 12, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity
-              }}
-            />
-          </motion.div>
-        </motion.div>
-      )}
+          />
+        </div>
+      </motion.div>
     </section>
   );
 };

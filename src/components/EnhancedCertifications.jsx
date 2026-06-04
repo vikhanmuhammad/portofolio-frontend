@@ -1,34 +1,13 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Award, Calendar, Hash, ExternalLink, Cloud, Users, TrendingUp, Brain, Smartphone, Shield } from 'lucide-react';
 import { certifications } from '../data/portfolioData';
-import gsap from 'gsap';
 
 // ------------------------------
 // CARD COMPONENT (MOBILE-FRIENDLY)
 // ------------------------------
 const CertificationCard = ({ cert, index, inView, hoveredCard, setHoveredCard, isMobile }) => {
-  const cardRef = useRef(null);
-
-  // GSAP animation only on desktop
-  useEffect(() => {
-    if (!inView || isMobile || !cardRef.current) return;
-
-    gsap.fromTo(
-      cardRef.current,
-      { opacity: 0, y: 80, rotateY: -15 },
-      {
-        opacity: 1,
-        y: 0,
-        rotateY: 0,
-        duration: 0.8,
-        delay: index * 0.15,
-        ease: 'power3.out',
-      }
-    );
-  }, [inView, index, isMobile]);
-
   const icons = {
     cloud: Cloud,
     users: Users,
@@ -41,65 +20,54 @@ const CertificationCard = ({ cert, index, inView, hoveredCard, setHoveredCard, i
 
   return (
     <motion.div
-      ref={cardRef}
       key={cert.id}
+      initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 24 }}
+      animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.45, delay: index * 0.08 }}
       onMouseEnter={() => !isMobile && setHoveredCard(cert.id)}
       onMouseLeave={() => !isMobile && setHoveredCard(null)}
-      whileHover={!isMobile ? { y: -12, scale: 1.02 } : {}}
-      transition={{ duration: 0.3 }}
+      whileHover={!isMobile ? { y: -5 } : {}}
       style={{
         background: 'var(--bg-primary)',
-        borderRadius: '20px',
-        padding: '32px',
-        border: `2px solid ${hoveredCard === cert.id && !isMobile ? cert.color : 'var(--border-subtle)'}`,
+        borderRadius: '16px',
+        padding: '24px',
+        border: `1px solid ${hoveredCard === cert.id && !isMobile ? cert.color + '60' : 'var(--border-subtle)'}`,
         position: 'relative',
         overflow: 'hidden',
-        opacity: isMobile ? 1 : 0,
         cursor: 'pointer',
-        boxShadow: hoveredCard === cert.id && !isMobile ? `0 25px 60px ${cert.color}40` : '0 4px 16px var(--shadow-sm)',
-        transition: 'all 0.3s ease',
+        transition: 'border-color 0.2s, box-shadow 0.2s',
+        boxShadow: hoveredCard === cert.id && !isMobile ? `0 8px 32px rgba(0,0,0,0.2)` : 'none',
       }}
     >
-      {/* Top bar */}
-      <motion.div
+      {/* Accent top bar */}
+      <div
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-          height: '4px',
+          height: '3px',
           background: cert.color,
+          borderRadius: '16px 16px 0 0',
         }}
-        animate={!isMobile ? {
-          boxShadow:
-            hoveredCard === cert.id
-              ? [`0 0 20px ${cert.color}`, `0 0 40px ${cert.color}`, `0 0 20px ${cert.color}`]
-              : `0 0 8px ${cert.color}`,
-        } : {}}
-        transition={{ duration: 2, repeat: Infinity }}
       />
 
       {/* Icon */}
-      <motion.div
+      <div
         style={{
-          width: '72px',
-          height: '72px',
+          width: '56px',
+          height: '56px',
           background: `${cert.color}15`,
-          borderRadius: '16px',
+          borderRadius: '12px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          marginBottom: '20px',
-          border: `2px solid ${cert.color}30`,
+          marginBottom: '16px',
+          border: `1px solid ${cert.color}25`,
         }}
-        animate={!isMobile ? {
-          rotate: hoveredCard === cert.id ? 360 : 0,
-          scale: hoveredCard === cert.id ? 1.1 : 1,
-        } : {}}
-        transition={{ duration: 0.6 }}
       >
-        <Icon size={36} style={{ color: cert.color }} />
-      </motion.div>
+        <Icon size={28} style={{ color: cert.color }} />
+      </div>
 
       {/* Name */}
       <h3 className="text-lg font-bold mb-2" style={{ color: 'var(--text-primary)', lineHeight: '1.4' }}>
@@ -180,17 +148,9 @@ const CertificationCard = ({ cert, index, inView, hoveredCard, setHoveredCard, i
 // MAIN COMPONENT
 // ------------------------------
 const EnhancedCertifications = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [hoveredCard, setHoveredCard] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-
-  const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -201,26 +161,12 @@ const EnhancedCertifications = () => {
 
   return (
     <section
-      ref={sectionRef}
       id="certifications"
       className="section"
-      style={{ background: 'var(--bg-secondary)', position: 'relative', overflow: 'hidden' }}
+      style={{ background: 'var(--bg-secondary)' }}
     >
-      <motion.div
-        style={{
-          position: 'absolute',
-          top: '15%',
-          right: '10%',
-          width: '350px',
-          height: '350px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%)',
-          filter: 'blur(70px)',
-          y,
-        }}
-      />
 
-      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+      <div className="container">
         <motion.div
           ref={ref}
           initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}

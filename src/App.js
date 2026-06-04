@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import "./styles/portfolio.css";
 import "./styles/themes.css";
@@ -19,12 +19,27 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
 function App() {
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem('portfolio-theme') || 'dark'
+  );
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('portfolio-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    document.body.classList.add('theme-transitioning');
+    setTheme(t => t === 'dark' ? 'light' : 'dark');
+    setTimeout(() => document.body.classList.remove('theme-transitioning'), 300);
+  };
+
   return (
     <ParallaxProvider>
       <SmoothScroll>
         <CustomCursor />
         <div className="App">
-          <Navigation />
+          <Navigation theme={theme} toggleTheme={toggleTheme} />
           <Hero />
           <About />
           <Education />

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { engineeringSkills, skillCategories } from '../data/portfolioData';
-import { ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const EnhancedEngineeringSkills = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
@@ -28,32 +28,8 @@ const EnhancedEngineeringSkills = () => {
     <section
       id="skills"
       className="section"
-      style={{ background: 'var(--bg-primary)', position: 'relative', overflow: 'hidden' }}
+      style={{ background: 'var(--bg-primary)' }}
     >
-      {/* Animated background only on desktop */}
-      {!isMobile && (
-        <motion.div
-          style={{
-            position: 'absolute',
-            top: '10%',
-            right: '10%',
-            width: '300px',
-            height: '300px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-          animate={{
-            y: [0, 50, 0],
-            x: [0, -30, 0],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      )}
 
       <div className="container">
         <motion.div
@@ -74,27 +50,12 @@ const EnhancedEngineeringSkills = () => {
             </motion.h2>
 
             <motion.p
-              style={{
-                maxWidth: '600px',
-                margin: '0 auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-              }}
+              className="body-lg"
+              style={{ maxWidth: '600px', margin: '0 auto' }}
               initial={isMobile ? { opacity: 1 } : { opacity: 0 }}
               animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="body-lg"
             >
-              {!isMobile && (
-                <motion.span
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                >
-                  <Sparkles size={20} color="var(--accent-primary)" />
-                </motion.span>
-              )}
               Categorized by experience level and real-world application
             </motion.p>
           </div>
@@ -129,46 +90,31 @@ const EnhancedEngineeringSkills = () => {
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  {/* Top bar animation only on desktop */}
-                  {!isMobile && (
-                    <motion.div
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: '4px',
-                        background: categoryData.color,
-                      }}
-                      animate={{
-                        boxShadow: isHovered
-                          ? [
-                              `0 0 20px ${categoryData.color}`,
-                              `0 0 40px ${categoryData.color}`,
-                              `0 0 20px ${categoryData.color}`,
-                            ]
-                          : `0 0 10px ${categoryData.color}`,
-                      }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  )}
+                  {/* Accent top bar */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '3px',
+                      background: categoryData.color,
+                      borderRadius: '20px 20px 0 0',
+                    }}
+                  />
 
                   {/* Skill count */}
-                  <motion.div
+                  <div
                     style={{
-                      fontSize: '48px',
+                      fontSize: '44px',
                       fontWeight: '800',
-                      marginBottom: '16px',
+                      marginBottom: '12px',
                       textAlign: 'center',
                       color: categoryData.color,
-                      textShadow: !isMobile && isHovered ? `0 0 30px ${categoryData.color}` : 'none',
-                      transition: 'text-shadow 0.3s ease',
                     }}
-                    animate={!isMobile && isHovered ? { scale: [1, 1.1, 1] } : {}}
-                    transition={{ duration: 0.5 }}
                   >
                     {skillCount}
-                  </motion.div>
+                  </div>
 
                   {/* Label & Description */}
                   <h3 className="text-center text-lg font-bold uppercase mb-3" style={{ color: 'var(--text-primary)' }}>
@@ -261,25 +207,23 @@ const EnhancedEngineeringSkills = () => {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       style={{
-                        fontSize: '28px',
+                        fontSize: '22px',
                         fontWeight: '700',
                         color: skillCategories[expandedCategory].color,
-                        marginBottom: '32px',
+                        marginBottom: '28px',
                         textTransform: 'uppercase',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '12px',
+                        gap: '10px',
                       }}
                     >
-                      <motion.div
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                      <span
                         style={{
-                          width: '12px',
-                          height: '12px',
+                          width: '10px',
+                          height: '10px',
                           borderRadius: '50%',
                           background: skillCategories[expandedCategory].color,
-                          boxShadow: `0 0 20px ${skillCategories[expandedCategory].color}`,
+                          flexShrink: 0,
                         }}
                       />
                       {skillCategories[expandedCategory].label} Skills

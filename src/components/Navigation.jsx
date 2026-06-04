@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 
-const Navigation = () => {
+const Navigation = ({ theme, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -12,7 +12,7 @@ const Navigation = () => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     const handleResize = () => setIsMobile(window.innerWidth < 768);
 
-    handleResize(); // initial check
+    handleResize();
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleResize);
 
@@ -29,15 +29,13 @@ const Navigation = () => {
     { name: 'Experience', href: '#experience' },
     { name: 'Certification', href: '#certifications' },
     { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'Contact', href: '#contact' },
   ];
 
   const handleNavClick = (href) => {
     setIsMobileMenuOpen(false);
     const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -52,19 +50,15 @@ const Navigation = () => {
           left: 0,
           right: 0,
           zIndex: 1000,
-          background: isScrolled ? 'rgba(17, 17, 19, 0.95)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(10px)' : 'none',
+          background: isScrolled ? 'var(--nav-bg-scrolled)' : 'transparent',
+          backdropFilter: isScrolled ? 'blur(12px)' : 'none',
           borderBottom: isScrolled ? '1px solid var(--border-subtle)' : 'none',
           transition: 'all 0.3s ease',
-          padding: '20px 0'
+          padding: '16px 0',
         }}
       >
         <div className="container">
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             {/* Logo */}
             <a
               href="#"
@@ -73,21 +67,21 @@ const Navigation = () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               style={{
-                fontSize: '24px',
+                fontSize: '22px',
                 fontWeight: '700',
                 color: 'var(--accent-primary)',
                 textDecoration: 'none',
-                transition: 'transform 0.2s ease'
+                transition: 'opacity 0.2s',
               }}
-              onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-              onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
               {personalInfo.name.split(' ')[0]}
             </a>
 
-            {/* Desktop Navigation */}
+            {/* Desktop nav */}
             {!isMobile && (
-              <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '28px', alignItems: 'center' }}>
                 {navItems.map((item, index) => (
                   <a
                     key={index}
@@ -99,77 +93,87 @@ const Navigation = () => {
                     style={{
                       color: 'var(--text-secondary)',
                       textDecoration: 'none',
-                      fontSize: '15px',
+                      fontSize: '14px',
                       fontWeight: '500',
                       transition: 'color 0.2s ease',
-                      position: 'relative'
                     }}
-                    onMouseEnter={(e) => e.target.style.color = 'var(--accent-primary)'}
-                    onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}
+                    onMouseEnter={(e) => (e.target.style.color = 'var(--accent-primary)')}
+                    onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
                   >
                     {item.name}
                   </a>
                 ))}
+
+                {/* Theme toggle */}
+                <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                </button>
               </div>
             )}
 
-            {/* Mobile Menu Button */}
+            {/* Mobile: theme toggle + hamburger */}
             {isMobile && (
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '40px',
-                  height: '40px',
-                  background: 'var(--bg-secondary)',
-                  border: '1px solid var(--border-primary)',
-                  borderRadius: '8px',
-                  color: 'var(--text-primary)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                  e.currentTarget.style.background = 'var(--accent-bg)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border-primary)';
-                  e.currentTarget.style.background = 'var(--bg-secondary)';
-                }}
-              >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Light mode' : 'Dark mode'}>
+                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                </button>
+
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '36px',
+                    height: '36px',
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-primary)',
+                    borderRadius: '8px',
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                    e.currentTarget.style.background = 'var(--accent-bg)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border-primary)';
+                    e.currentTarget.style.background = 'var(--bg-secondary)';
+                  }}
+                >
+                  {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                </button>
+              </div>
             )}
           </div>
         </div>
       </motion.nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25 }}
             style={{
               position: 'fixed',
-              top: '80px',
+              top: '68px',
               right: 0,
               bottom: 0,
               width: '100%',
-              maxWidth: '320px',
-              background: 'rgba(17, 17, 19, 0.98)',
-              backdropFilter: 'blur(10px)',
+              maxWidth: '300px',
+              background: 'var(--nav-bg-mobile)',
+              backdropFilter: 'blur(12px)',
               borderLeft: '1px solid var(--border-subtle)',
               zIndex: 999,
-              padding: '32px 24px',
-              overflowY: 'auto'
+              padding: '28px 20px',
+              overflowY: 'auto',
             }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {navItems.map((item, index) => (
                 <motion.a
                   key={index}
@@ -178,26 +182,25 @@ const Navigation = () => {
                     e.preventDefault();
                     handleNavClick(item.href);
                   }}
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, x: 16 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
+                  transition={{ delay: index * 0.04 }}
                   style={{
                     color: 'var(--text-secondary)',
                     textDecoration: 'none',
-                    fontSize: '18px',
+                    fontSize: '16px',
                     fontWeight: '500',
-                    padding: '12px 16px',
+                    padding: '12px 14px',
                     borderRadius: '8px',
                     transition: 'all 0.2s ease',
-                    background: 'transparent'
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.color = 'var(--accent-primary)';
-                    e.target.style.background = 'var(--accent-bg)';
+                    e.currentTarget.style.color = 'var(--accent-primary)';
+                    e.currentTarget.style.background = 'var(--accent-bg)';
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.color = 'var(--text-secondary)';
-                    e.target.style.background = 'transparent';
+                    e.currentTarget.style.color = 'var(--text-secondary)';
+                    e.currentTarget.style.background = 'transparent';
                   }}
                 >
                   {item.name}
@@ -218,12 +221,12 @@ const Navigation = () => {
             onClick={() => setIsMobileMenuOpen(false)}
             style={{
               position: 'fixed',
-              top: '80px',
+              top: '68px',
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'rgba(0, 0, 0, 0.5)',
-              zIndex: 998
+              background: 'rgba(0, 0, 0, 0.4)',
+              zIndex: 998,
             }}
           />
         )}

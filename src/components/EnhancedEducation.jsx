@@ -1,38 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { GraduationCap, MapPin, Calendar, Award } from 'lucide-react';
 import { education } from '../data/portfolioData';
-import gsap from 'gsap';
 
 /* -------------------------
    CARD COMPONENT FIX HOOKS
 -------------------------- */
 const EducationCard = ({ edu, index, inView, isMobile, lineLeft }) => {
-  const cardRef = useRef(null);
-
-  useEffect(() => {
-    if (!isMobile && inView && cardRef.current) {
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, x: index % 2 === 0 ? -100 : 100 },
-        { 
-          opacity: 1, 
-          x: 0, 
-          duration: 0.8, 
-          delay: 0.3 + index * 0.2,
-          ease: 'power3.out'
-        }
-      );
-    } else if (isMobile && cardRef.current) {
-      // Tampilkan langsung tanpa animasi di mobile
-      gsap.set(cardRef.current, { opacity: 1, x: 0 });
-    }
-  }, [inView, index, isMobile]);
-
   return (
-    <div
-      ref={cardRef}
+    <motion.div
+      initial={isMobile ? { opacity: 1 } : { opacity: 0, x: index % 2 === 0 ? -40 : 40 }}
+      animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.55, delay: 0.2 + index * 0.15 }}
       style={{
         position: 'relative',
         marginBottom: index < education.length - 1 ? (isMobile ? '32px' : '48px') : '0',
@@ -40,7 +20,6 @@ const EducationCard = ({ edu, index, inView, isMobile, lineLeft }) => {
         gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
         gap: isMobile ? '32px' : '48px',
         alignItems: 'center',
-        opacity: 0
       }}
     >
       {/* Timeline dot */}
@@ -54,26 +33,13 @@ const EducationCard = ({ edu, index, inView, isMobile, lineLeft }) => {
         }}
         whileHover={{ scale: 1.5 }}
       >
-        <motion.div
+        <div
           style={{
-            width: '24px',
-            height: '24px',
+            width: '16px',
+            height: '16px',
             background: 'var(--accent-primary)',
             borderRadius: '50%',
-            border: '4px solid var(--bg-secondary)',
-            boxShadow: '0 0 30px rgba(59, 130, 246, 0.8)',
-          }}
-          animate={{
-            boxShadow: [
-              '0 0 20px rgba(59, 130, 246, 0.5)',
-              '0 0 40px rgba(59, 130, 246, 1)',
-              '0 0 20px rgba(59, 130, 246, 0.5)',
-            ],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: 'easeInOut',
+            border: '3px solid var(--bg-secondary)',
           }}
         />
       </motion.div>
@@ -84,32 +50,26 @@ const EducationCard = ({ edu, index, inView, isMobile, lineLeft }) => {
         textAlign: isMobile ? 'left' : index % 2 === 0 ? 'right' : 'left',
         paddingLeft: isMobile ? '64px' : '0'
       }}>
-        <motion.div 
-          className="card" 
-          style={{ textAlign: 'left', cursor: 'pointer' }}
-          whileHover={{ 
-            y: -10, 
-            scale: 1.02,
-            boxShadow: '0 30px 60px rgba(59, 130, 246, 0.3)'
-          }}
-          transition={{ duration: 0.3 }}
+        <motion.div
+          className="card"
+          style={{ textAlign: 'left', cursor: 'default' }}
+          whileHover={!isMobile ? { y: -4 } : {}}
+          transition={{ duration: 0.2 }}
         >
-          <motion.div
+          <div
             style={{
-              width: '56px',
-              height: '56px',
+              width: '52px',
+              height: '52px',
               background: 'var(--accent-bg)',
-              borderRadius: '16px',
+              borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: '20px'
+              marginBottom: '16px',
             }}
-            whileHover={{ rotate: 360, scale: 1.1 }}
-            transition={{ duration: 0.6 }}
           >
-            <GraduationCap size={isMobile ? 28 : 32} color="var(--accent-primary)" />
-          </motion.div>
+            <GraduationCap size={isMobile ? 24 : 28} color="var(--accent-primary)" />
+          </div>
 
           <h3 className="h3" style={{ marginBottom: '8px', color: 'var(--text-primary)', fontSize: isMobile ? '16px' : '20px' }}>
             {edu.degree}
@@ -165,20 +125,14 @@ const EducationCard = ({ edu, index, inView, isMobile, lineLeft }) => {
                 animate={isMobile ? {} : inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ delay: 0.5 + index * 0.2 + i * 0.1 }}
               >
-                <motion.div 
-                  style={{ 
-                    width: '8px', 
-                    height: '8px', 
-                    background: 'var(--accent-primary)', 
-                    borderRadius: '50%' 
-                  }}
-                  animate={{
-                    scale: [1, 1.3, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: i * 0.3
+                <span
+                  style={{
+                    width: '5px',
+                    height: '5px',
+                    background: 'var(--accent-primary)',
+                    borderRadius: '50%',
+                    flexShrink: 0,
+                    marginTop: '4px',
                   }}
                 />
                 <span>{highlight}</span>
@@ -187,7 +141,7 @@ const EducationCard = ({ edu, index, inView, isMobile, lineLeft }) => {
           </div>
         </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -197,19 +151,8 @@ const EducationCard = ({ edu, index, inView, isMobile, lineLeft }) => {
 ------------------------- */
 
 const EnhancedEducation = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.15 });
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const sectionRef = useRef(null);
-
-  const isMobileDevice = window.innerWidth < 768;
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start']
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -221,35 +164,19 @@ const EnhancedEducation = () => {
   const lineTransform = isMobile ? 'none' : 'translateX(-50%)';
 
   return (
-    <section ref={sectionRef} id="education" className="section" style={{ background: 'var(--bg-secondary)', position: 'relative', overflow: 'hidden' }}>
-      
-      {/* Background gradient */}
-      <motion.div
-        style={{
-          position: 'absolute',
-          top: '30%',
-          right: '10%',
-          width: '400px',
-          height: '400px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-          opacity: isMobileDevice ? 1 : opacity,
-          scale: isMobileDevice ? 1 : scale
-        }}
-      />
+    <section id="education" className="section" style={{ background: 'var(--bg-secondary)' }}>
 
       <div className="container">
         <motion.div
           ref={ref}
-          initial={isMobileDevice ? {} : { opacity: 0, y: 50 }}
-          animate={isMobileDevice ? {} : inView ? { opacity: 1, y: 0 } : {}}
+          initial={isMobile ? {} : { opacity: 0, y: 50 }}
+          animate={isMobile ? {} : inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
           <div className="section-title">
             <motion.h2
-              initial={isMobileDevice ? {} : { opacity: 0, y: 30 }}
-              animate={isMobileDevice ? {} : inView ? { opacity: 1, y: 0 } : {}}
+              initial={isMobile ? {} : { opacity: 0, y: 30 }}
+              animate={isMobile ? {} : inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6 }}
             >
               Education <span className="accent">Timeline</span>
@@ -258,8 +185,8 @@ const EnhancedEducation = () => {
             <motion.p 
               className="body-lg" 
               style={{ maxWidth: '600px', margin: '0 auto' }}
-              initial={isMobileDevice ? {} : { opacity: 0 }}
-              animate={isMobileDevice ? {} : inView ? { opacity: 1 } : {}}
+              initial={isMobile ? {} : { opacity: 0 }}
+              animate={isMobile ? {} : inView ? { opacity: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               My academic journey and achievements
@@ -279,8 +206,8 @@ const EnhancedEducation = () => {
                 background: 'linear-gradient(180deg, transparent, var(--accent-primary), transparent)',
                 transform: lineTransform
               }}
-              initial={isMobileDevice ? {} : { scaleY: 0 }}
-              animate={isMobileDevice ? {} : inView ? { scaleY: 1 } : {}}
+              initial={isMobile ? {} : { scaleY: 0 }}
+              animate={isMobile ? {} : inView ? { scaleY: 1 } : {}}
               transition={{ duration: 1, delay: 0.5 }}
             />
 

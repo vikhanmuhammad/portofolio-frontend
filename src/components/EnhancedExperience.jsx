@@ -1,22 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Briefcase, Calendar, MapPin, Sparkles } from 'lucide-react';
+import { Briefcase, Calendar, MapPin } from 'lucide-react';
 import { experience } from '../data/portfolioData';
-import gsap from 'gsap';
 
 const EnhancedExperience = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
-  const sectionRef = useRef(null);
-  const cardRefs = useRef([]);
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.15 });
   const [isMobile, setIsMobile] = useState(false);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start']
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -25,193 +15,188 @@ const EnhancedExperience = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // GSAP animation for cards only on desktop
-  useEffect(() => {
-    if (!inView || isMobile) return;
-
-    cardRefs.current.forEach((card, index) => {
-      if (!card) return;
-      gsap.fromTo(
-        card,
-        { opacity: 0, y: 80, rotateX: -15 },
-        { opacity: 1, y: 0, rotateX: 0, duration: 0.8, delay: index * 0.2, ease: 'power3.out' }
-      );
-    });
-  }, [inView, isMobile]);
-
   return (
     <section
-      ref={sectionRef}
       id="experience"
       className="section"
-      style={{ background: 'var(--bg-primary)', position: 'relative', overflow: 'hidden' }}
+      style={{ background: 'var(--bg-primary)' }}
     >
-      {/* Parallax background */}
-      <motion.div
-        style={{
-          position: 'absolute',
-          top: '20%',
-          left: '10%',
-          width: '300px',
-          height: '300px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-          y
-        }}
-      />
-
       <div className="container">
         <motion.div
           ref={ref}
-          initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          animate={isMobile ? { opacity: 1, y: 0 } : inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 40 }}
+          animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.55 }}
         >
           {/* Section Title */}
-          <div className="section-title text-center mb-8">
+          <div className="section-title">
             <motion.h2
-              initial={isMobile ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-              animate={isMobile ? { opacity: 1, scale: 1 } : inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.6 }}
+              initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
+              animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.55 }}
             >
               Work <span className="accent">Experience</span>
             </motion.h2>
-
             <motion.p
               className="body-lg"
-              style={{ maxWidth: '600px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              style={{ maxWidth: '600px', margin: '0 auto' }}
               initial={isMobile ? { opacity: 1 } : { opacity: 0 }}
               animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.55, delay: 0.15 }}
             >
-              {!isMobile && (
-                <motion.span
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                >
-                  <Sparkles size={20} color="var(--accent-primary)" />
-                </motion.span>
-              )}
               My professional journey and key achievements
             </motion.p>
           </div>
 
-          {/* EXPERIENCE CARDS */}
-          <div className="grid grid-cols-1 gap-8" style={{ maxWidth: '900px', margin: '0 auto' }}>
+          {/* Experience Cards */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '24px',
+              maxWidth: '860px',
+              margin: '0 auto',
+            }}
+          >
             {experience.map((exp, index) => (
               <motion.div
                 key={exp.id}
-                ref={(el) => (cardRefs.current[index] = el)}
-                whileHover={!isMobile ? { y: -12, scale: 1.02, boxShadow: '0 30px 60px rgba(59, 130, 246, 0.3)' } : {}}
-                transition={{ duration: 0.3 }}
+                initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 30 }}
+                animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={!isMobile ? { y: -4 } : {}}
                 style={{
                   background: 'var(--bg-secondary)',
-                  borderRadius: '20px',
-                  padding: '32px',
-                  border: '2px solid var(--border-subtle)',
+                  borderRadius: '16px',
+                  padding: isMobile ? '20px' : '28px 32px',
+                  border: '1px solid var(--border-subtle)',
+                  borderLeft: '3px solid var(--accent-primary)',
                   position: 'relative',
-                  overflow: 'hidden',
-                  opacity: isMobile ? 1 : 0,
-                  cursor: 'pointer'
+                  transition: 'box-shadow 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isMobile)
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                {/* Gradient top border */}
-                <motion.div
+                <div
                   style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: '4px',
-                    background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-purple), var(--accent-cyan))',
+                    display: 'flex',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    gap: '20px',
                   }}
-                  initial={isMobile ? { scaleX: 1 } : { scaleX: 0 }}
-                  whileInView={isMobile ? { scaleX: 1 } : { scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: index * 0.1 }}
-                />
-
-                <div className="flex flex-col md:flex-row gap-6">
-                  {/* ICON */}
-                  <motion.div
+                >
+                  {/* Icon */}
+                  <div
                     style={{
-                      width: '64px',
-                      height: '64px',
+                      width: '52px',
+                      height: '52px',
                       background: 'var(--accent-bg)',
-                      borderRadius: '16px',
+                      borderRadius: '12px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      flexShrink: 0
+                      flexShrink: 0,
                     }}
-                    whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
-                    transition={{ duration: 0.6 }}
                   >
-                    <Briefcase size={32} color="var(--accent-primary)" />
-                  </motion.div>
+                    <Briefcase size={24} color="var(--accent-primary)" />
+                  </div>
 
-                  {/* CONTENT */}
-                  <div className="flex-1">
-                    <h3 className="text-xl md:text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+                  {/* Content */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h3
+                      style={{
+                        fontSize: isMobile ? '17px' : '20px',
+                        fontWeight: '700',
+                        marginBottom: '4px',
+                        color: 'var(--text-primary)',
+                      }}
+                    >
                       {exp.role}
                     </h3>
 
-                    <div className="text-lg font-semibold mb-3" style={{ color: 'var(--accent-primary)' }}>
+                    <div
+                      style={{
+                        fontSize: '15px',
+                        fontWeight: '600',
+                        marginBottom: '10px',
+                        color: 'var(--accent-primary)',
+                      }}
+                    >
                       {exp.company}
                     </div>
 
-                    {/* PERIOD + LOCATION */}
-                    <div className="flex flex-wrap gap-4 mb-4 text-sm" style={{ color: 'var(--text-muted)' }}>
-                      <div className="flex items-center gap-2">
-                        <Calendar size={16} />
-                        <span>{exp.period}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin size={16} />
-                        <span>{exp.location}</span>
-                      </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '16px',
+                        marginBottom: '12px',
+                        fontSize: '13px',
+                        color: 'var(--text-muted)',
+                      }}
+                    >
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <Calendar size={14} />
+                        {exp.period}
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <MapPin size={14} />
+                        {exp.location}
+                      </span>
                     </div>
 
-                    <p className="mb-4" style={{ color: 'var(--text-secondary)', lineHeight: '1.7' }}>
+                    <p
+                      style={{
+                        color: 'var(--text-secondary)',
+                        lineHeight: '1.7',
+                        marginBottom: exp.achievements?.length ? '12px' : 0,
+                        fontSize: '14px',
+                      }}
+                    >
                       {exp.description}
                     </p>
 
-                    {/* ACHIEVEMENTS */}
+                    {/* Achievements */}
                     {exp.achievements?.length > 0 && (
-                      <div className="space-y-2">
+                      <ul
+                        style={{
+                          listStyle: 'none',
+                          padding: 0,
+                          margin: 0,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '6px',
+                        }}
+                      >
                         {exp.achievements.map((achievement, idx) => (
-                          <motion.div
+                          <li
                             key={idx}
-                            initial={isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                            animate={isMobile ? { opacity: 1, x: 0 } : inView ? { opacity: 1, x: 0 } : {}}
-                            transition={{ delay: 0.5 + index * 0.2 + idx * 0.1 }}
-                            className="flex items-start gap-3"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              gap: '10px',
+                              fontSize: '13px',
+                              color: 'var(--text-secondary)',
+                            }}
                           >
-                            <motion.div
+                            <span
                               style={{
-                                width: '8px',
-                                height: '8px',
-                                background: 'var(--accent-primary)',
+                                width: '5px',
+                                height: '5px',
                                 borderRadius: '50%',
-                                marginTop: '8px',
-                                flexShrink: 0
+                                background: 'var(--accent-primary)',
+                                marginTop: '7px',
+                                flexShrink: 0,
                               }}
-                              animate={!isMobile ? {
-                                scale: [1, 1.3, 1],
-                                boxShadow: [
-                                  '0 0 8px rgba(59, 130, 246, 0.5)',
-                                  '0 0 16px rgba(59, 130, 246, 0.8)',
-                                  '0 0 8px rgba(59, 130, 246, 0.5)'
-                                ]
-                              } : {}}
-                              transition={{ duration: 2, repeat: Infinity, delay: idx * 0.3 }}
                             />
-                            <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-                              {achievement}
-                            </span>
-                          </motion.div>
+                            {achievement}
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     )}
                   </div>
                 </div>

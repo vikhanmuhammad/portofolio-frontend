@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Briefcase, Calendar, MapPin } from 'lucide-react';
+import { Calendar, MapPin } from 'lucide-react';
 import { experience } from '../data/portfolioData';
+
+const expAccents = ['#FF9BB3', '#7FD89A', '#86C5FF', '#FFB347'];
 
 const EnhancedExperience = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.15 });
@@ -16,11 +18,7 @@ const EnhancedExperience = () => {
   }, []);
 
   return (
-    <section
-      id="experience"
-      className="section"
-      style={{ background: 'var(--bg-primary)' }}
-    >
+    <section id="experience" className="section" style={{ background: 'var(--bg-secondary)' }}>
       <div className="container">
         <motion.div
           ref={ref}
@@ -28,8 +26,8 @@ const EnhancedExperience = () => {
           animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55 }}
         >
-          {/* Section Title */}
           <div className="section-title">
+            <span className="section-kicker">{'// work.log'}</span>
             <motion.h2
               initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
               animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, y: 0 } : {}}
@@ -37,171 +35,108 @@ const EnhancedExperience = () => {
             >
               Work <span className="accent">Experience</span>
             </motion.h2>
-            <motion.p
-              className="body-lg"
-              style={{ maxWidth: '600px', margin: '0 auto' }}
-              initial={isMobile ? { opacity: 1 } : { opacity: 0 }}
-              animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.55, delay: 0.15 }}
-            >
-              My professional journey and key achievements
-            </motion.p>
           </div>
 
-          {/* Experience Cards */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '24px',
-              maxWidth: '860px',
-              margin: '0 auto',
-            }}
-          >
-            {experience.map((exp, index) => (
-              <motion.div
-                key={exp.id}
-                initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 30 }}
-                animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={!isMobile ? { y: -4 } : {}}
-                style={{
-                  background: 'var(--bg-secondary)',
-                  borderRadius: '16px',
-                  padding: isMobile ? '20px' : '28px 32px',
-                  border: '1px solid var(--border-subtle)',
-                  borderLeft: '3px solid var(--accent-primary)',
-                  position: 'relative',
-                  transition: 'box-shadow 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (!isMobile)
-                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.2)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: isMobile ? 'column' : 'row',
-                    gap: '20px',
-                  }}
-                >
-                  {/* Icon */}
-                  <div
-                    style={{
-                      width: '52px',
-                      height: '52px',
-                      background: 'var(--accent-bg)',
-                      borderRadius: '12px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                    }}
+          <div style={{ maxWidth: '820px', margin: '0 auto', position: 'relative' }}>
+            <div
+              style={{
+                position: 'absolute',
+                left: isMobile ? '7px' : '7px',
+                top: '8px',
+                bottom: '8px',
+                width: '2px',
+                background: 'repeating-linear-gradient(to bottom, var(--divider) 0, var(--divider) 6px, transparent 6px, transparent 12px)',
+              }}
+            />
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+              {experience.map((exp, index) => {
+                const accent = expAccents[index % expAccents.length];
+                return (
+                  <motion.div
+                    key={exp.id}
+                    initial={isMobile ? { opacity: 1 } : { opacity: 0, x: -20 }}
+                    animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    style={{ position: 'relative', paddingLeft: '36px' }}
                   >
-                    <Briefcase size={24} color="var(--accent-primary)" />
-                  </div>
-
-                  {/* Content */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3
+                    <span
                       style={{
-                        fontSize: isMobile ? '17px' : '20px',
-                        fontWeight: '700',
-                        marginBottom: '4px',
-                        color: 'var(--text-primary)',
+                        position: 'absolute',
+                        left: '0',
+                        top: '6px',
+                        width: '16px',
+                        height: '16px',
+                        borderRadius: '50%',
+                        background: accent,
+                        border: '3px solid var(--bg-secondary)',
+                        boxShadow: `0 0 0 2px ${accent}40`,
+                      }}
+                    />
+
+                    <motion.div
+                      whileHover={!isMobile ? { y: -4 } : {}}
+                      style={{
+                        background: 'var(--bg-primary)',
+                        borderRadius: '14px',
+                        padding: isMobile ? '20px' : '24px 28px',
+                        border: '1px solid var(--border-subtle)',
+                        borderLeft: `3px solid ${accent}`,
                       }}
                     >
-                      {exp.role}
-                    </h3>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '10px', marginBottom: '6px' }}>
+                        <h3 style={{ fontSize: isMobile ? '16px' : '19px', fontWeight: '700', color: 'var(--text-primary)' }}>
+                          {exp.title}
+                        </h3>
+                        <span
+                          style={{
+                            fontSize: '11px', fontWeight: '600', padding: '4px 10px', borderRadius: '20px',
+                            background: `${accent}1f`, color: accent, border: `1px solid ${accent}40`,
+                            whiteSpace: 'nowrap', height: 'fit-content',
+                          }}
+                        >
+                          {exp.period}
+                        </span>
+                      </div>
 
-                    <div
-                      style={{
-                        fontSize: '15px',
-                        fontWeight: '600',
-                        marginBottom: '10px',
-                        color: 'var(--accent-primary)',
-                      }}
-                    >
-                      {exp.company}
-                    </div>
+                      <div style={{ fontSize: '14px', fontWeight: '600', color: accent, marginBottom: '10px' }}>
+                        {exp.company}
+                      </div>
 
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: '16px',
-                        marginBottom: '12px',
-                        fontSize: '13px',
-                        color: 'var(--text-muted)',
-                      }}
-                    >
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <Calendar size={14} />
-                        {exp.period}
-                      </span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <MapPin size={14} />
-                        {exp.location}
-                      </span>
-                    </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px', fontSize: '12px', color: 'var(--text-muted)' }}>
+                        <MapPin size={13} /> {exp.location}
+                        <span style={{ marginLeft: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Calendar size={13} /> {exp.period}
+                        </span>
+                      </div>
 
-                    <p
-                      style={{
-                        color: 'var(--text-secondary)',
-                        lineHeight: '1.7',
-                        marginBottom: exp.achievements?.length ? '12px' : 0,
-                        fontSize: '14px',
-                      }}
-                    >
-                      {exp.description}
-                    </p>
+                      <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: exp.achievements?.length ? '12px' : 0, fontSize: '13px' }}>
+                        {exp.description}
+                      </p>
 
-                    {/* Achievements */}
-                    {exp.achievements?.length > 0 && (
-                      <ul
-                        style={{
-                          listStyle: 'none',
-                          padding: 0,
-                          margin: 0,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '6px',
-                        }}
-                      >
-                        {exp.achievements.map((achievement, idx) => (
-                          <li
-                            key={idx}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'flex-start',
-                              gap: '10px',
-                              fontSize: '13px',
-                              color: 'var(--text-secondary)',
-                            }}
-                          >
-                            <span
-                              style={{
-                                width: '5px',
-                                height: '5px',
-                                borderRadius: '50%',
-                                background: 'var(--accent-primary)',
-                                marginTop: '7px',
-                                flexShrink: 0,
-                              }}
-                            />
-                            {achievement}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                      {exp.achievements?.length > 0 && (
+                        <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 14px', display: 'flex', flexDirection: 'column', gap: '7px' }}>
+                          {exp.achievements.map((achievement, idx) => (
+                            <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                              <span style={{ color: accent, flexShrink: 0 }}>▸</span>
+                              {achievement}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {exp.technologies?.length > 0 && (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
+                          {exp.technologies.map((tech) => (
+                            <span key={tech} className="chip" style={{ fontSize: '11px' }}>{tech}</span>
+                          ))}
+                        </div>
+                      )}
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </motion.div>
       </div>

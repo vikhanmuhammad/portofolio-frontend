@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Instagram } from 'lucide-react';
+import { Mail, Phone, Github, Linkedin, Instagram } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 
 const Contact = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.2
-  });
-
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -19,217 +15,127 @@ const Contact = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [formStatus, setFormStatus] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setFormStatus('sending');
-
-    // Simulate sending
-    setTimeout(() => {
-      setFormStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => setFormStatus(''), 3000);
-    }, 1500);
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const containerStyle = {
-    display: 'grid',
-    gridTemplateColumns: isMobile ? '1fr' : '1fr 1.5fr',
-    gap: isMobile ? '32px' : '48px',
-    maxWidth: '1000px',
-    margin: '0 auto',
-    padding: isMobile ? '0 16px' : '0',
-    overflow: 'hidden'
-  };
+  const socials = [
+    { icon: Github, url: personalInfo.socials.github, label: 'github' },
+    { icon: Linkedin, url: personalInfo.socials.linkedin, label: 'linkedin' },
+    { icon: Instagram, url: personalInfo.socials.twitter, label: 'instagram' },
+  ];
 
   return (
-    <section id="contact" className="section overflow-x-hidden" style={{ background: 'var(--bg-primary)' }}>
+    <section id="contact" className="section" style={{ position: 'relative', zIndex: 1 }}>
       <div className="container">
         <motion.div
           ref={ref}
-          initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          animate={isMobile ? { opacity: 1, y: 0 } : inView ? { opacity: 1, y: 0 } : {}}
+          initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 50 }}
+          animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <div className="section-title text-center mb-8">
-            <h2>
-              Get In <span className="accent">Touch</span>
-            </h2>
-            <p
-              className="body-lg"
-              style={{
-                maxWidth: '600px',
-                margin: '0 auto',
-                padding: isMobile ? '0 16px' : '0',
-                wordBreak: 'break-word'
-              }}
+          <div className="section-title">
+            <span className="section-kicker">{'// contact.sh'}</span>
+            <motion.h2
+              initial={isMobile ? { opacity: 1 } : { opacity: 0, scale: 0.9 }}
+              animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.6 }}
             >
-              Have a project in mind? Let's work together!
-            </p>
+              Get In <span className="accent">Touch</span>
+            </motion.h2>
           </div>
 
-          <div style={containerStyle}>
-            {/* Left contact info */}
-            <motion.div
-              initial={isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-              animate={isMobile ? { opacity: 1, x: 0 } : inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <h3 className="h2" style={{ marginBottom: '24px', fontSize: isMobile ? '20px' : undefined }}>
-                Contact Information
-              </h3>
-              <p className="body-md" style={{ marginBottom: '32px', lineHeight: '1.7' }}>
-                Feel free to reach out through any of these channels. I'm always open to discussing new projects and opportunities.
-              </p>
+          <motion.div
+            initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 30 }}
+            animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="term-window"
+            style={{ maxWidth: '780px', margin: '0 auto' }}
+          >
+            <div className="term-header">
+              <span className="term-dot" style={{ background: 'var(--tl-red)' }} />
+              <span className="term-dot" style={{ background: 'var(--tl-yellow)' }} />
+              <span className="term-dot" style={{ background: 'var(--tl-green)' }} />
+              <span className="term-title">bash — contact</span>
+            </div>
 
-              <div style={{ marginBottom: '48px' }}>
-                {[{ icon: Mail, label: 'Email', value: personalInfo.email, href: `mailto:${personalInfo.email}` },
-                  { icon: Phone, label: 'Phone', value: personalInfo.phone },
-                  { icon: MapPin, label: 'Location', value: personalInfo.location }
-                ].map((item, idx) => {
-                  const Icon = item.icon;
-                  return (
-                    <div
-                      key={idx}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '16px',
-                        padding: '16px',
-                        background: 'var(--bg-secondary)',
-                        borderRadius: '12px',
-                        marginBottom: '16px',
-                        border: '1px solid var(--border-subtle)',
-                        transition: 'all 0.3s ease',
-                        cursor: 'default',
-                        overflowWrap: 'break-word'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isMobile) {
-                          e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                          e.currentTarget.style.transform = 'translateX(8px)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isMobile) {
-                          e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                          e.currentTarget.style.transform = 'translateX(0)';
-                        }
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: '48px',
-                          height: '48px',
-                          background: 'var(--accent-bg)',
-                          borderRadius: '8px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      >
-                        <Icon size={24} color="var(--accent-primary)" />
-                      </div>
-                      <div style={{ wordBreak: 'break-word' }}>
-                        <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>{item.label}</div>
-                        {item.href ? (
-                          <a href={item.href} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: isMobile ? '14px' : '16px' }}>
-                            {item.value}
-                          </a>
-                        ) : (
-                          <div style={{ color: 'var(--text-primary)', fontSize: isMobile ? '14px' : '16px' }}>{item.value}</div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+            <div className="term-body" style={{ fontSize: '14px' }}>
+              <div style={{ color: 'var(--text-faint)', marginBottom: '6px' }}>
+                <span style={{ color: 'var(--accent-teal)' }}>$</span> whoami
               </div>
+              <div style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>{personalInfo.name}</div>
 
-              {/* Social links */}
-              <div>
-                <h4 style={{ fontSize: '16px', marginBottom: '16px', color: 'var(--text-secondary)' }}>Follow Me</h4>
-                <div style={{ display: 'flex', gap: '12px', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
-                  {[{ icon: Github, url: personalInfo.socials.github },
-                    { icon: Linkedin, url: personalInfo.socials.linkedin },
-                    { icon: Instagram, url: personalInfo.socials.twitter }
-                  ].map((social, index) => {
-                    const Icon = social.icon;
-                    return (
-                      <a
-                        key={index}
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          width: '48px',
-                          height: '48px',
-                          background: 'var(--bg-secondary)',
-                          borderRadius: '8px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'var(--text-muted)',
-                          transition: 'all 0.2s ease',
-                          border: '1px solid var(--border-subtle)'
-                        }}
-                      >
-                        <Icon size={24} />
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Right form */}
-            <motion.div
-              initial={isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-              animate={isMobile ? { opacity: 1, x: 0 } : inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <form
-                onSubmit={handleSubmit}
+              <h3
                 style={{
-                  background: 'var(--bg-secondary)',
-                  padding: isMobile ? '24px' : '40px',
-                  borderRadius: '16px',
-                  border: '1px solid var(--border-subtle)',
-                  overflowWrap: 'break-word'
+                  fontFamily: "'Space Mono', monospace",
+                  fontSize: isMobile ? '22px' : '30px',
+                  fontWeight: '700',
+                  color: 'var(--text-primary)',
+                  lineHeight: 1.3,
+                  marginBottom: '14px',
                 }}
               >
-                <div style={{ marginBottom: '24px' }}>
-                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Your Name</label>
-                  <input type="text" name="name" value={formData.name} onChange={handleChange} required className="input-field break-words" placeholder="John Doe" />
-                </div>
+                Let's build something great together…
+              </h3>
 
-                <div style={{ marginBottom: '24px' }}>
-                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Your Email</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} required className="input-field break-words" placeholder="john@example.com" />
-                </div>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '28px' }}>
+                Have a project in mind or just want to talk shop? My inbox is always open — I'll get back to you as soon as I can.
+              </p>
 
-                <div style={{ marginBottom: '32px' }}>
-                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Message</label>
-                  <textarea name="message" value={formData.message} onChange={handleChange} required className="input-field break-words" placeholder="Tell me about your project..." rows="6" />
-                </div>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+                  gap: '14px',
+                  marginBottom: '24px',
+                }}
+              >
+                <a
+                  href={`mailto:${personalInfo.email}`}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px',
+                    background: 'var(--bg-secondary)', border: '1px solid var(--code-border)', borderRadius: '10px',
+                    textDecoration: 'none', transition: 'border-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-primary)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--code-border)'; }}
+                >
+                  <Mail size={18} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '13px', wordBreak: 'break-all' }}>{personalInfo.email}</span>
+                </a>
 
-                <button type="submit" className="btn-primary" disabled={formStatus === 'sending'} style={{ width: '100%', justifyContent: 'center', opacity: formStatus === 'sending' ? 0.7 : 1, cursor: formStatus === 'sending' ? 'not-allowed' : 'pointer' }}>
-                  {formStatus === 'sending' ? 'Sending...' : <>Send Message <Send size={20} /></>}
-                </button>
+                <a
+                  href={`tel:${personalInfo.phone.replace(/\s+/g, '')}`}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px',
+                    background: 'var(--bg-secondary)', border: '1px solid var(--code-border)', borderRadius: '10px',
+                    textDecoration: 'none', transition: 'border-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-primary)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--code-border)'; }}
+                >
+                  <Phone size={18} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>{personalInfo.phone}</span>
+                </a>
+              </div>
 
-                {formStatus === 'success' && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ marginTop: '16px', padding: '12px', background: 'var(--accent-bg)', border: '1px solid var(--accent-primary)', borderRadius: '8px', color: 'var(--accent-primary)', textAlign: 'center', fontSize: '14px', fontWeight: '600' }}>
-                    Message sent successfully! I'll get back to you soon.
-                  </motion.div>
-                )}
-              </form>
-            </motion.div>
-          </div>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '24px' }}>
+                {socials.map(({ icon: Icon, url, label }) => (
+                  <a
+                    key={label}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="chip"
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Icon size={14} /> {label}
+                  </a>
+                ))}
+              </div>
+
+              <div style={{ color: 'var(--text-faint)' }}>
+                <span style={{ color: 'var(--accent-teal)' }}>$</span>{' '}
+                <span style={{ animation: 'blink-caret 1s step-end infinite' }}>▍</span>
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

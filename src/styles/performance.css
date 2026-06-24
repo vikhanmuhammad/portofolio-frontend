@@ -19,7 +19,7 @@ img {
 
 /* Reduce animations on mobile */
 @media (max-width: 768px) {
-  *:not(.tech-carousel-track) {
+  *:not(.tech-carousel-track):not(.blob) {
     animation-duration: 0.3s !important;
     transition-duration: 0.3s !important;
   }

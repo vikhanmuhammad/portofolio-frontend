@@ -1,12 +1,55 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
-import { personalInfo } from '../data/portfolioData';
+import { personalInfo, education, experience, techStack, certifications } from '../data/portfolioData';
+
+const roles = [
+  'Software Engineer',
+  'Fullstack Developer',
+  'System Analyst',
+  'Mobile Developer (Flutter)',
+  'AI Tinkerer',
+];
+
+const stats = [
+  { value: education[0]?.gpa || '—', label: 'GPA' },
+  { value: `${experience.length}`, label: 'Roles Held' },
+  { value: `${techStack.length}+`, label: 'Tech & Tools' },
+  { value: `${certifications.length}`, label: 'Certifications' },
+];
+
+const codeStack = ['Flutter', 'JavaScript', 'Laravel', 'Node.js', 'MySQL'];
+
+const useTypewriter = (words, speed = 65, pause = 1500) => {
+  const [text, setText] = useState('');
+  const [wordIndex, setWordIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const current = words[wordIndex % words.length];
+    let timeout;
+
+    if (!deleting && text.length < current.length) {
+      timeout = setTimeout(() => setText(current.slice(0, text.length + 1)), speed);
+    } else if (!deleting && text.length === current.length) {
+      timeout = setTimeout(() => setDeleting(true), pause);
+    } else if (deleting && text.length > 0) {
+      timeout = setTimeout(() => setText(current.slice(0, text.length - 1)), speed / 2);
+    } else if (deleting && text.length === 0) {
+      setDeleting(false);
+      setWordIndex((i) => i + 1);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [text, deleting, wordIndex, words, speed, pause]);
+
+  return text;
+};
 
 const Hero = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const heroRef = useRef(null);
-  const spotRef = useRef(null);
+  const typed = useTypewriter(roles);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -14,270 +57,246 @@ const Hero = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Cursor spotlight — direct DOM update, zero re-renders
-  useEffect(() => {
-    const hero = heroRef.current;
-    const spot = spotRef.current;
-    if (!hero || !spot) return;
+  const isMobile = windowWidth < 900;
 
-    const handleMouseMove = (e) => {
-      const rect = hero.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      spot.style.left = `${x}px`;
-      spot.style.top = `${y}px`;
-      spot.style.opacity = '1';
-    };
-
-    const handleMouseLeave = () => {
-      spot.style.opacity = '0';
-    };
-
-    hero.addEventListener('mousemove', handleMouseMove);
-    hero.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      hero.removeEventListener('mousemove', handleMouseMove);
-      hero.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, []);
-
-  const scrollToContact = () =>
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   const headingSize =
     windowWidth < 360 ? '1.75rem' :
-    windowWidth < 480 ? '2rem' :
+    windowWidth < 480 ? '2.1rem' :
     windowWidth < 768 ? '2.6rem' :
-    '3.8rem';
-
-  const subHeadingSize =
-    windowWidth < 480 ? '0.95rem' :
-    windowWidth < 768 ? '1.05rem' :
-    '1.35rem';
+    '3.4rem';
 
   return (
     <section
       ref={heroRef}
-      className="hero-section"
+      id="home"
       style={{
         position: 'relative',
-        minHeight: '100vh',
+        minHeight: '100dvh',
         display: 'flex',
         alignItems: 'center',
-        overflow: 'hidden',
+        overflow: 'visible',
+        zIndex: 1,
       }}
     >
-      {/* Dot grid */}
-      <div className="hero-bg-grid" />
-
-      {/* Cursor spotlight — follows mouse via direct DOM, no re-render */}
-      <div
-        ref={spotRef}
-        style={{
-          position: 'absolute',
-          width: '560px',
-          height: '560px',
-          borderRadius: '50%',
-          background:
-            'radial-gradient(circle, var(--hero-spot-color) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-          pointerEvents: 'none',
-          zIndex: 0,
-          transform: 'translate(-50%, -50%)',
-          left: '50%',
-          top: '40%',
-          opacity: 0,
-          transition: 'left 0.18s ease, top 0.18s ease, opacity 0.4s ease',
-        }}
-      />
-
-      {/* Static top-center soft glow */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '-60px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '600px',
-          height: '360px',
-          background:
-            'radial-gradient(ellipse at center top, var(--hero-spot-color) 0%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-
       <div
         className="container"
         style={{
           position: 'relative',
           zIndex: 1,
           width: '100%',
-          textAlign: 'center',
-          padding: windowWidth < 480 ? '100px 14px 60px' : '100px 24px 60px',
+          padding: windowWidth < 480 ? '120px 14px 60px' : '120px 24px 60px',
         }}
-      >
-        {/* Status badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          style={{ marginBottom: '28px' }}
-        >
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              background: 'rgba(34, 197, 94, 0.07)',
-              border: '1px solid rgba(34, 197, 94, 0.22)',
-              color: 'rgb(74, 222, 128)',
-              padding: '6px 16px',
-              borderRadius: '20px',
-              fontSize: windowWidth < 480 ? '12px' : '13px',
-              fontWeight: '500',
-              letterSpacing: '0.01em',
-            }}
-          >
-            <span className="status-dot" />
-            Available for new opportunities
-          </span>
-        </motion.div>
-
-        {/* Heading */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.2 }}
-          style={{
-            fontSize: headingSize,
-            marginBottom: '16px',
-            lineHeight: 1.15,
-            fontWeight: '800',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          Hi, I'm{' '}
-          <span style={{ color: 'var(--accent-primary)' }}>
-            {personalInfo.name}
-          </span>
-        </motion.h1>
-
-        {/* Tagline */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.3 }}
-          style={{
-            fontSize: subHeadingSize,
-            color: 'var(--text-secondary)',
-            fontWeight: 400,
-            maxWidth: '580px',
-            margin: '0 auto 40px',
-            lineHeight: 1.65,
-          }}
-        >
-          {personalInfo.tagline}
-        </motion.p>
-
-        {/* Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.4 }}
-          style={{
-            display: 'flex',
-            gap: '12px',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            marginBottom: '48px',
-          }}
-        >
-          <button className="btn-primary" onClick={scrollToContact}>
-            Contact Me <ArrowRight size={18} />
-          </button>
-
-          <a
-            href={personalInfo.socials.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: 'none' }}
-          >
-            <button className="btn-secondary">
-              <Github size={18} /> View GitHub
-            </button>
-          </a>
-        </motion.div>
-
-        {/* Social icons */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.55 }}
-          style={{
-            display: 'flex',
-            gap: '20px',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {[
-            { Icon: Linkedin, href: personalInfo.socials.linkedin },
-            { Icon: Github, href: personalInfo.socials.github },
-            { Icon: Mail, href: `mailto:${personalInfo.email}` },
-          ].map(({ Icon, href }, index) => (
-            <a
-              key={index}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="social-icon-link"
-            >
-              <Icon size={22} />
-            </a>
-          ))}
-        </motion.div>
-      </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-        style={{
-          position: 'absolute',
-          bottom: '32px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          cursor: 'pointer',
-          zIndex: 1,
-          opacity: 0.45,
-        }}
-        onClick={() =>
-          document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })
-        }
       >
         <div
           style={{
-            width: '22px',
-            height: '36px',
-            border: '2px solid var(--border-primary)',
-            borderRadius: '12px',
-            display: 'flex',
-            justifyContent: 'center',
-            paddingTop: '6px',
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1.1fr 0.9fr',
+            gap: isMobile ? '48px' : '56px',
+            alignItems: 'center',
           }}
         >
-          <div
-            style={{
-              width: '3px',
-              height: '8px',
-              background: 'var(--text-muted)',
-              borderRadius: '2px',
+          {/* Left: text content */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              style={{ marginBottom: '24px' }}
+            >
+              <span className="status-pill">
+                🚀 hello_world.exe running...
+              </span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.2 }}
+              style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: headingSize,
+                marginBottom: '14px',
+                lineHeight: 1.15,
+                fontWeight: '700',
+              }}
+            >
+              {personalInfo.name}
+              <span style={{ color: 'var(--accent-orange)' }}>.</span>
+            </motion.h1>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.3 }}
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: windowWidth < 480 ? '15px' : '18px',
+                color: 'var(--accent-primary)',
+                marginBottom: '20px',
+                minHeight: '28px',
+              }}
+            >
+              <span style={{ color: 'var(--text-faint)' }}>{'> '}</span>
+              {typed}
+              <span style={{ animation: 'blink-caret 1s step-end infinite' }}>▍</span>
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.4 }}
+              style={{
+                fontSize: windowWidth < 480 ? '14px' : '16px',
+                color: 'var(--text-secondary)',
+                fontWeight: 400,
+                maxWidth: '520px',
+                marginBottom: '36px',
+                lineHeight: 1.7,
+              }}
+            >
+              {personalInfo.tagline}
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.5 }}
+              style={{
+                display: 'flex',
+                gap: '12px',
+                flexWrap: 'wrap',
+                marginBottom: '36px',
+              }}
+            >
+              <button className="btn-primary" onClick={() => scrollTo('projects')}>
+                view_projects() <ArrowRight size={16} />
+              </button>
+              <button className="btn-secondary" onClick={() => scrollTo('contact')}>
+                get_in_touch()
+              </button>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              style={{ display: 'flex', gap: '18px', alignItems: 'center' }}
+            >
+              {[
+                { Icon: Github, href: personalInfo.socials.github },
+                { Icon: Linkedin, href: personalInfo.socials.linkedin },
+                { Icon: Mail, href: `mailto:${personalInfo.email}` },
+              ].map(({ Icon, href }, index) => (
+                <a
+                  key={index}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-link"
+                >
+                  <Icon size={20} />
+                </a>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Right: fake code editor window */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: [24, 0, -8, 0] }}
+            transition={{
+              opacity: { duration: 0.6, delay: 0.4 },
+              y: { duration: 0.6, delay: 0.4, times: [0, 0.4, 0.7, 1] },
             }}
-          />
+          >
+            <motion.div
+              animate={isMobile ? { opacity: 1 } : { y: [0, -10, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              className="term-window"
+            >
+              <div className="term-header">
+                <span className="term-dot" style={{ background: 'var(--tl-red)' }} />
+                <span className="term-dot" style={{ background: 'var(--tl-yellow)' }} />
+                <span className="term-dot" style={{ background: 'var(--tl-green)' }} />
+                <span className="term-title">developer.js</span>
+              </div>
+              <div className="term-body">
+                <div><span style={{ color: 'var(--code-key)' }}>const</span> <span style={{ color: 'var(--code-prop)' }}>developer</span> = {'{'}</div>
+                <div style={{ paddingLeft: '20px' }}>
+                  <span style={{ color: 'var(--code-prop)' }}>name</span>:
+                  <span style={{ color: 'var(--code-string)' }}> '{personalInfo.name}'</span>,
+                </div>
+                <div style={{ paddingLeft: '20px' }}>
+                  <span style={{ color: 'var(--code-prop)' }}>role</span>:
+                  <span style={{ color: 'var(--code-string)' }}> '{personalInfo.title}'</span>,
+                </div>
+                <div style={{ paddingLeft: '20px' }}>
+                  <span style={{ color: 'var(--code-prop)' }}>based</span>:
+                  <span style={{ color: 'var(--code-string)' }}> '{personalInfo.location}'</span>,
+                </div>
+                <div style={{ paddingLeft: '20px' }}>
+                  <span style={{ color: 'var(--code-prop)' }}>stack</span>: [
+                  {codeStack.map((s, i) => (
+                    <span key={s}>
+                      <span style={{ color: 'var(--code-string)' }}>'{s}'</span>
+                      {i < codeStack.length - 1 ? ', ' : ''}
+                    </span>
+                  ))}
+                  ],
+                </div>
+                <div style={{ paddingLeft: '20px' }}>
+                  <span style={{ color: 'var(--code-prop)' }}>loves</span>:
+                  <span style={{ color: 'var(--code-string)' }}> 'clean architecture & good coffee'</span>,
+                </div>
+                <div style={{ paddingLeft: '20px' }}>
+                  <span style={{ color: 'var(--code-prop)' }}>coffee</span>:
+                  <span style={{ color: 'var(--code-key)' }}> true</span>,
+                </div>
+                <div style={{ paddingLeft: '20px' }}>
+                  <span style={{ color: 'var(--code-prop)' }}>available</span>:
+                  <span style={{ color: 'var(--code-key)' }}> true</span>,
+                </div>
+                <div>{'};'}</div>
+                <div style={{ color: 'var(--code-comment)', marginTop: '10px' }}>{'// always shipping something'}</div>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
-      </motion.div>
+
+        {/* Stats strip */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.7 }}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+            gap: '20px',
+            marginTop: isMobile ? '56px' : '80px',
+            paddingTop: '32px',
+            borderTop: '1px solid var(--divider)',
+          }}
+        >
+          {stats.map((stat, i) => (
+            <div key={i} style={{ textAlign: 'center' }}>
+              <div
+                style={{
+                  fontFamily: "'Space Mono', monospace",
+                  fontSize: isMobile ? '24px' : '32px',
+                  fontWeight: '700',
+                  color: 'var(--accent-primary)',
+                  marginBottom: '4px',
+                }}
+              >
+                {stat.value}
+              </div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{stat.label}</div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
     </section>
   );
 };

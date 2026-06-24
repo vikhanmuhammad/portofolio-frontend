@@ -3,6 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 
+const navItems = [
+  { name: 'about.me', href: '#about' },
+  { name: 'edu.json', href: '#education' },
+  { name: 'skills/', href: '#skills' },
+  { name: 'stack.ts', href: '#tech' },
+  { name: 'work.log', href: '#experience' },
+  { name: 'certs.pem', href: '#certifications' },
+  { name: 'projects/', href: '#projects' },
+  { name: 'contact.sh', href: '#contact' },
+];
+
 const Navigation = ({ theme, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -10,7 +21,7 @@ const Navigation = ({ theme, toggleTheme }) => {
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
 
     handleResize();
     window.addEventListener('scroll', handleScroll);
@@ -22,21 +33,13 @@ const Navigation = ({ theme, toggleTheme }) => {
     };
   }, []);
 
-  const navItems = [
-    { name: 'About', href: '#about' },
-    { name: 'Education', href: '#education' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Certification', href: '#certifications' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' },
-  ];
-
   const handleNavClick = (href) => {
     setIsMobileMenuOpen(false);
     const element = document.querySelector(href);
     if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const username = personalInfo.name.toLowerCase().replace(/\s+/g, '-');
 
   return (
     <>
@@ -51,37 +54,43 @@ const Navigation = ({ theme, toggleTheme }) => {
           right: 0,
           zIndex: 1000,
           background: isScrolled ? 'var(--nav-bg-scrolled)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(12px)' : 'none',
-          borderBottom: isScrolled ? '1px solid var(--border-subtle)' : 'none',
+          backdropFilter: 'blur(12px)',
+          borderBottom: isScrolled ? '1px solid var(--divider)' : 'none',
           transition: 'all 0.3s ease',
-          padding: '16px 0',
+          padding: '14px 0',
         }}
       >
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            {/* Logo */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+            {/* Traffic lights + path */}
             <a
-              href="#"
+              href="#home"
               onClick={(e) => {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              style={{
-                fontSize: '22px',
-                fontWeight: '700',
-                color: 'var(--accent-primary)',
-                textDecoration: 'none',
-                transition: 'opacity 0.2s',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', flexShrink: 0 }}
             >
-              {personalInfo.name.split(' ')[0]}
+              <span style={{ display: 'flex', gap: '6px' }}>
+                <span className="term-dot" style={{ background: 'var(--tl-red)', width: '9px', height: '9px' }} />
+                <span className="term-dot" style={{ background: 'var(--tl-yellow)', width: '9px', height: '9px' }} />
+                <span className="term-dot" style={{ background: 'var(--tl-green)', width: '9px', height: '9px' }} />
+              </span>
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  color: 'var(--text-primary)',
+                }}
+              >
+                ~/{username}
+              </span>
             </a>
 
             {/* Desktop nav */}
             {!isMobile && (
-              <div style={{ display: 'flex', gap: '28px', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                 {navItems.map((item, index) => (
                   <a
                     key={index}
@@ -93,20 +102,39 @@ const Navigation = ({ theme, toggleTheme }) => {
                     style={{
                       color: 'var(--text-secondary)',
                       textDecoration: 'none',
-                      fontSize: '14px',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '13px',
                       fontWeight: '500',
-                      transition: 'color 0.2s ease',
+                      padding: '6px 10px',
+                      borderRadius: '6px',
+                      transition: 'color 0.2s ease, background 0.2s ease',
                     }}
-                    onMouseEnter={(e) => (e.target.style.color = 'var(--accent-primary)')}
-                    onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = 'var(--accent-primary)';
+                      e.currentTarget.style.background = 'var(--accent-bg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = 'var(--text-secondary)';
+                      e.currentTarget.style.background = 'transparent';
+                    }}
                   >
                     {item.name}
                   </a>
                 ))}
 
-                {/* Theme toggle */}
-                <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
-                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                <span className="status-pill" style={{ marginLeft: '8px', padding: '5px 12px', fontSize: '11px' }}>
+                  <span className="status-dot" />
+                  available
+                </span>
+
+                <button
+                  className="theme-toggle"
+                  onClick={toggleTheme}
+                  title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                  style={{ marginLeft: '8px' }}
+                >
+                  {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+                  {theme === 'dark' ? 'light' : 'dark'}
                 </button>
               </div>
             )}
@@ -115,7 +143,7 @@ const Navigation = ({ theme, toggleTheme }) => {
             {isMobile && (
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Light mode' : 'Dark mode'}>
-                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                  {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
                 </button>
 
                 <button
@@ -126,7 +154,7 @@ const Navigation = ({ theme, toggleTheme }) => {
                     justifyContent: 'center',
                     width: '36px',
                     height: '36px',
-                    background: 'var(--bg-secondary)',
+                    background: 'var(--bg-tertiary)',
                     border: '1px solid var(--border-primary)',
                     borderRadius: '8px',
                     color: 'var(--text-primary)',
@@ -139,7 +167,7 @@ const Navigation = ({ theme, toggleTheme }) => {
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = 'var(--border-primary)';
-                    e.currentTarget.style.background = 'var(--bg-secondary)';
+                    e.currentTarget.style.background = 'var(--bg-tertiary)';
                   }}
                 >
                   {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -160,14 +188,14 @@ const Navigation = ({ theme, toggleTheme }) => {
             transition={{ duration: 0.25 }}
             style={{
               position: 'fixed',
-              top: '68px',
+              top: '64px',
               right: 0,
               bottom: 0,
               width: '100%',
               maxWidth: '300px',
               background: 'var(--nav-bg-mobile)',
               backdropFilter: 'blur(12px)',
-              borderLeft: '1px solid var(--border-subtle)',
+              borderLeft: '1px solid var(--divider)',
               zIndex: 999,
               padding: '28px 20px',
               overflowY: 'auto',
@@ -188,7 +216,8 @@ const Navigation = ({ theme, toggleTheme }) => {
                   style={{
                     color: 'var(--text-secondary)',
                     textDecoration: 'none',
-                    fontSize: '16px',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '15px',
                     fontWeight: '500',
                     padding: '12px 14px',
                     borderRadius: '8px',
@@ -206,6 +235,11 @@ const Navigation = ({ theme, toggleTheme }) => {
                   {item.name}
                 </motion.a>
               ))}
+
+              <span className="status-pill" style={{ marginTop: '16px', alignSelf: 'flex-start' }}>
+                <span className="status-dot" />
+                available
+              </span>
             </div>
           </motion.div>
         )}
@@ -221,7 +255,7 @@ const Navigation = ({ theme, toggleTheme }) => {
             onClick={() => setIsMobileMenuOpen(false)}
             style={{
               position: 'fixed',
-              top: '68px',
+              top: '64px',
               left: 0,
               right: 0,
               bottom: 0,

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import "./styles/portfolio.css";
-import "./styles/themes.css";
 import "./styles/performance.css";
 import { ParallaxProvider } from 'react-scroll-parallax';
 import SmoothScroll from "./components/SmoothScroll";
 import CustomCursor from "./components/MobileOptimizedCursor";
+import BackgroundBlobs from "./components/BackgroundBlobs";
 import Navigation from "./components/Navigation";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -38,6 +38,7 @@ function App() {
     <ParallaxProvider>
       <SmoothScroll>
         <CustomCursor />
+        <BackgroundBlobs />
         <div className="App">
           <Navigation theme={theme} toggleTheme={toggleTheme} />
           <Hero />

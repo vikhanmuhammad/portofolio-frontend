@@ -34,6 +34,7 @@ const Projects = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="section-title">
+            <span className="section-kicker">{'// projects/'}</span>
             <motion.h2
               initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               animate={isMobile ? { opacity: 1, y: 0 } : inView ? { opacity: 1, y: 0 } : {}}
@@ -41,15 +42,6 @@ const Projects = () => {
             >
               Featured <span className="accent">Projects</span>
             </motion.h2>
-            <motion.p
-              className="body-lg"
-              style={{ maxWidth: '600px', margin: '0 auto' }}
-              initial={isMobile ? { opacity: 1 } : { opacity: 0 }}
-              animate={isMobile ? { opacity: 1 } : inView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              Showcasing my best work and technical expertise
-            </motion.p>
           </div>
 
           <div className="grid grid-2" style={{ gap: '32px' }}>

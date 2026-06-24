@@ -101,7 +101,7 @@ const EnhancedTechStack = () => {
 
             <div
               className={`tech-carousel-track${paused ? ' paused' : ''}`}
-              style={{ gap: '10px' }}
+              style={{ gap: '10px', animationDuration: isMobile ? '140s' : '60s' }}
             >
               {tripled.map((tech, index) => {
                 const Icon = iconMap[tech.name] || Code2;

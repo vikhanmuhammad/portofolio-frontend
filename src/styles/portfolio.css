@@ -536,6 +536,12 @@ textarea.input-field {
   will-change: transform;
 }
 
+@media (max-width: 768px) {
+  .tech-carousel-track {
+    animation-duration: 140s;
+  }
+}
+
 .tech-carousel-track.paused,
 .tech-carousel-wrapper:hover .tech-carousel-track {
   animation-play-state: paused;

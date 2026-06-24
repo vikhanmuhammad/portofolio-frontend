@@ -55,6 +55,19 @@ const projects = [
       motto: "Ease of Company Vehicle Monitoring",
       type: "Web & Mobile App",
     },
+    {
+      _id: "67f546a91b8b519013edb670",
+      title: "ArchiGuide",
+      position: "VSCode Extension Developer",
+      description:
+        "ArchiGuide is a VSCode extension that acts as a prompt director for GitHub Copilot Agent. Instead of calling AI APIs directly, it guides users through a structured 5-step flow, from idea and system description to document generation, HTML prototype design, tech stack selection, and final project scaffold, requiring no API keys and working entirely through the VSCode Extension API and local file system.",
+      technologies: ["TypeScript", "VSCode Extension API", "GitHub Copilot"],
+      link: [
+        "https://marketplace.visualstudio.com/items?itemName=vikhandev.archiguide",
+      ],
+      motto: "From Idea to Architecture, Guided",
+      type: "VSCode Extension",
+    },
   ];
   
   export default projects;

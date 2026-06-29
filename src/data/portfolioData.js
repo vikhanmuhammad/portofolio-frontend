@@ -154,7 +154,7 @@ export const experience = [
       "Collaborating with cross-functional teams and actively participating in Sprint Planning and other Scrum ceremonies to ensure effective delivery of solutions",
       "Contributing to creating an efficient and collaborative coding environment, promoting teamwork, continuous learning, and “vibe coding” culture"
     ],
-    technologies: ["Angular", "NodeTS", "Flutter", "PostgreSQL", "My SQL"]
+    technologies: ["Angular", "ReactJS", "Redis", "Socket.IO", "Java Spring Boot", "NodeTS", "Prisma ORM", "Flutter", "PostgreSQL", "My SQL", "CI/CD", "Git", "Module Federation", "Docker", "AI Agent"]
   },
   {
     id: 2,
@@ -261,6 +261,18 @@ export const projects = [
     achievement: "Published on the Visual Studio Marketplace",
     github: null,
     live: "https://marketplace.visualstudio.com/items?itemName=vikhandev.archiguide",
+    featured: true
+  },
+  {
+    id: 6,
+    title: "Halal Programmer",
+    description: "A faith-oriented VSCode extension that integrates spiritual reminders into the development workflow. Features include a startup gate requiring 'Bismillah' input when opening VS Code, a closure gate for 'Alhamdulillah' when closing with Ctrl+Shift+W, error-triggered 'Astaghfirullah' sound effects, and a comprehensive prayer time tracker with reminders based on geolocation.",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?crop=entropy&cs=srgb&fm=jpg&q=85",
+    technologies: ["TypeScript", "VSCode Extension API", "Aladhan API", "ip-api"],
+    skills: ["VSCode Extension Development", "Geolocation Integration", "Developer Tooling"],
+    achievement: "Published on the Visual Studio Marketplace",
+    github: null,
+    live: "https://marketplace.visualstudio.com/items?itemName=vikhandev.halal-programming",
     featured: true
   }
 ];
